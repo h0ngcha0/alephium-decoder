@@ -8,10 +8,11 @@ import { List, ListItem } from '@mui/material'
 
 interface TransactionRawComponentProps {
   txRaw: string
+  breakDown: boolean
 }
 
 export const TransactionRawComponent: React.FunctionComponent<TransactionRawComponentProps> = (props) => {
-  const { txRaw } = props
+  const { txRaw, breakDown } = props
   const { script, compactSignedIntCodec, compactUnsignedIntCodec, inputCodec, ArrayCodec, assetOutput, contractOutputRefCodec, EitherCodec, contractOutput, signatureCodec } = codec
   const inputsCodes = new ArrayCodec(inputCodec)
   const assetOutputsCodec = new ArrayCodec(assetOutput.assetOutputCodec)
@@ -22,12 +23,8 @@ export const TransactionRawComponent: React.FunctionComponent<TransactionRawComp
   const outputsCodec = new ArrayCodec(outputCodec)
   const signaturesCodec = new ArrayCodec(signatureCodec)
 
-  return txRaw ? (
+  return breakDown === false ? (
     <div style={{ maxWidth: '480px', textAlign: 'left', marginTop: '20px', wordWrap: 'break-word' }}>
-      <Typography variant="h6">
-        Raw Binary
-      </Typography>
-      <br/>
       <Typography variant="body2">
         <Tooltip title="Version" arrow>
           <span className="TxVersion">{byteToString(decoded.unsigned.version)}</span>
@@ -69,13 +66,10 @@ export const TransactionRawComponent: React.FunctionComponent<TransactionRawComp
           <span className="ScriptSignatures">{encodeToString(signaturesCodec, decoded.scriptSignatures.value)}</span>
         </Tooltip>
       </Typography>
-
       <br/>
-
-      <Typography variant="h6">
-        Break Down
-      </Typography>
-      <br/>
+    </div>
+    ) : (
+    <div style={{ maxWidth: '480px', textAlign: 'left', marginTop: '20px', wordWrap: 'break-word' }}>
       <Typography variant="body2">
             <b>Version Number</b>
             <br/>
@@ -215,8 +209,6 @@ export const TransactionRawComponent: React.FunctionComponent<TransactionRawComp
             }
       </Typography>
     </div>
-  ) : (
-    <div> Transaction raw data not available </div>
   )
 }
 

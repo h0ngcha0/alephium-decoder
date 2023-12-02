@@ -1,7 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
 import PropTypes from 'prop-types'
-import { makeStyles } from 'tss-react/mui'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Typography from '@mui/material/Typography'
@@ -37,18 +36,9 @@ function a11yProps(index: string) {
   }
 }
 
-const useStyles = makeStyles()((theme) => ({
-  root: {
-    flexGrow: 1,
-    width: '100%',
-    backgroundColor: theme.palette.background.paper
-  }
-}))
-
 export default function ScrollableTabs(props: any) {
   //const { title1, children1, title2, children2, ...other } = props;
   const { tabs } = props
-  const { classes } = useStyles()
   const [value, setValue] = React.useState(0)
 
   const handleChange = (event: any, newValue: any) => {
@@ -56,7 +46,7 @@ export default function ScrollableTabs(props: any) {
   }
 
   return (
-    <div className={classes.root}>
+    <div>
       <Tabs
         value={value}
         onChange={handleChange}

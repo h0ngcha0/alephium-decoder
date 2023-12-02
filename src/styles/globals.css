@@ -265,9 +265,1074 @@ a.image {
   background: black;
 }
 
+.Signature {
+  color: yellow;
+  background: blue;
+}
+
+.SignatureInverse {
+  color: blue;
+  background: yellow;
+}
+
 .ScriptSignatures {
   color: black;
   background: lightblue;
+}
+
+.isPublic {
+  color: white;
+  background: darkblue;
+}
+
+.assetModifier {
+  color: white;
+  background: darkred;
+}
+
+.argsLength {
+  color: white;
+  background: green;
+}
+
+.localsLength {
+  color: white;
+  background: darkorange;
+}
+
+.returnsLength {
+  color: white;
+  background: darkolivegreen;
+}
+
+.InstrsLength {
+  color: black;
+  background: lightgray;
+}
+
+
+.CallLocal {
+  color: white;
+  background: darkolivegreen;
+}
+
+.CallExternal {
+  color: white;
+  background: darkgoldenrod;
+}
+
+.Return {
+  color: white;
+  background: darkolivegreen;
+}
+
+.ConstTrue {
+  color: white;
+  background: darkcyan;
+}
+
+.ConstFalse {
+  color: white;
+  background: darkgray;
+}
+
+.I256Const0 {
+  color: white;
+  background: darkmagenta;
+}
+
+.I256Const1 {
+  color: white;
+  background: darkblue;
+}
+
+.I256Const2 {
+  color: white;
+  background: darkred;
+}
+
+.I256Const3 {
+  color: white;
+  background: darkorchid;
+}
+
+.I256Const4 {
+  color: black;
+  background: lightblue;
+}
+
+.I256Const5 {
+  color: black;
+  background: lightcoral;
+}
+
+.I256ConstN1 {
+  color: black;
+  background: lightcyan;
+}
+
+.U256Const0 {
+  color: black;
+  background: lightgoldenrodyellow;
+}
+
+.U256Const1 {
+  color: black;
+  background: lightpink;
+}
+
+.U256Const2 {
+  color: black;
+  background: lightgreen;
+}
+
+.U256Const3 {
+  color: black;
+  background: lightsalmon;
+}
+
+.U256Const4 {
+  color: black;
+  background: lightseagreen;
+}
+
+.U256Const5 {
+  color: black;
+  background: lightskyblue
+}
+
+.I256Const {
+  color: black;
+  background: lightslategray;
+}
+
+.U256Const {
+  color: black;
+  background: lightsteelblue;
+}
+
+.ByteConst {
+  color: white;
+  background: green;
+}
+
+.AddressConst {
+  color: black;
+  background: lightcoral;
+}
+
+.LoadLocal {
+  color: yellow;
+  background: blue;
+}
+
+.StoreLocal {
+  color: blue;
+  background: yellow;
+}
+
+.Pop {
+  color: black;
+  background: lightgoldenrodyellow;
+}
+
+.BoolNot {
+  color: white;
+  background: green;
+}
+
+.BoolAnd {
+  color: gray;
+  background: darkgreen;
+}
+
+.BoolOr {
+  color: darkgray;
+  background: black;
+}
+
+.BoolEq {
+  color: lightcoral;
+  background: darkcyan;
+}
+
+.BoolNeq {
+  color: lightcyan;
+  background: darkgreen;
+}
+
+.BoolToByteVec {
+  color: lightgreen;
+  background: black;
+}
+
+.I256Add {
+  color: lightskyblue;
+  background: darkslategrey;
+}
+
+.I256Sub {
+  color: darkcyan;
+  background: lightgoldenrodyellow;
+}
+
+.I256Mul {
+  color: black;
+  background: whitesmoke;
+}
+
+.I256Div {
+  color: darkgrey;
+  background: darkblue;
+}
+
+.I256Mod {
+  color: darkkhaki;
+  background: black;
+}
+
+.I256Eq {
+  color: mediumaquamarine;
+  background: sienna;
+}
+
+.I256Neq {
+  color: yellowgreen;
+  background: mediumblue;
+}
+
+.I256Lt {
+  color: white;
+  background: black;
+}
+
+.I256Le {
+  color: aqua;
+  background: firebrick;
+}
+
+.I256Gt {
+  color: violet;
+  background: black;
+}
+
+.I256Ge {
+  color: mediumturquoise;
+  background: black;
+}
+
+.U256Add {
+  color: mistyrose;
+  background: midnightblue;
+}
+
+.U256Sub {
+  color: white;
+  background: mediumvioletred;
+}
+
+.U256Mul {
+  color: white;
+  background: midnightblue;
+}
+
+.U256Div {
+  color: gray;
+  background: darkred;
+}
+
+.U256Mod {
+  color: crimson;
+  background: blue;
+}
+
+.U256Eq {
+  color: maroon;
+  background: yellow;
+}
+
+.U256Neq {
+  color: moccasin;
+  background: black;
+}
+
+.U256Lt {
+  color: forestgreen;
+  background: yellow;
+}
+
+.U256Le {
+  color: chartreuse;
+  background: black;
+}
+
+.U256Gt {
+  color: black;
+  background: moccasin;
+}
+
+.U256Ge {
+  color: white;
+  background: firebrick;
+}
+
+.U256ModAdd {
+  color: black;
+  background: lightcyan;
+}
+
+.U256ModSub {
+  color: navy;
+  background: mintcream;
+}
+
+.U256ModMul {
+  color: lightcyan;
+  background: darkblue;
+}
+
+.U256BitAnd {
+  color: lightsalmon;
+  background: darkmagenta;
+}
+
+.U256BitOr {
+  color: lightcoral;
+  background: black;
+}
+
+.U256Xor {
+  color: lightgoldenrodyellow;
+  background: black;
+}
+
+.U256SHL {
+  color: lightcyan;
+  background: black;
+}
+
+.U256SHR {
+  color: lightpink;
+  background: black;
+}
+
+.I256ToU256 {
+  color: lightgreen;
+  background: black;
+}
+
+.I256ToByteVec {
+  color: lightskyblue;
+  background: black;
+}
+
+.U256ToI256 {
+  color: lightseagreen;
+  background: darkblue;
+}
+
+.U256ToByteVec {
+  color: gainsboro;
+  background: black;
+}
+
+.ByteVecEq {
+  color: white;
+  background: darkblue;
+}
+
+.ByteVecNeq {
+  color: darkblue;
+  background: white;
+}
+
+.ByteVecSize {
+  color: black;
+  background: lightcoral;
+}
+
+.ByteVecConcat {
+  color: lightcoral;
+  background: black;
+}
+
+.AddressEq {
+  color: white;
+  background: darkolivegreen
+}
+
+.AddressNeq {
+  color: white;
+  background: darkgreen;
+}
+
+.AddressToByteVec {
+  color: white;
+  background: darkorange;
+}
+
+.IsAssetAddress {
+  color: white;
+  background: darkcyan;
+}
+
+.IsContractAddress {
+  color: white;
+  background: darkorchid;
+}
+
+.Jump {
+  color: white;
+  background: darkmagenta;
+}
+
+.IfTrue {
+  color: white;
+  background: darkred;
+}
+
+.IfFalse {
+  color: white;
+  background: darksalmon;
+}
+
+.Assert {
+  color: white;
+  background: darkolivegreen
+}
+
+.Blake2b {
+  color: black;
+  background: lightpink;
+}
+
+.Keccak256 {
+  color: lightpink;
+  background: black;
+}
+
+.Sha256 {
+  color: darkblue;
+  background: yellow;
+}
+
+.Sha3 {
+  color: lightyellow;
+  background: darkblue;
+}
+
+.VerifyTxSignature {
+  color: hotpink;
+  background: green;
+}
+
+.VerifySecP256K1 {
+  color: green;
+  background: hotpink;
+}
+
+.VerifyED25519 {
+  color: white;
+  background: black;
+}
+
+.BlockTimeStamp {
+  color: black;
+  background: deepskyblue;
+}
+
+.BlockTarget {
+  color: deepskyblue;
+  background: black;
+}
+
+.TxId {
+  color: green;
+  background: yellow;
+}
+
+.TxInputAddressAt {
+  color: yellow;
+  background: green;
+}
+
+.TxInputsSize {
+  color: mediumslateblue;
+  background: mediumspringgreen;
+}
+
+.VerifyAbsoluteLocktime {
+  color: mediumspringgreen;
+  background: mediumslateblue;
+}
+
+.VerifyRelativeLocktime {
+  color: white;
+  background: darkolivegreen
+}
+
+.Log1 {
+  color: black;
+  background: lightblue;
+}
+
+.Log2 {
+  color: black;
+  background: lightcoral;
+}
+
+.Log3 {
+  color: black;
+  background: lightcyan;
+}
+
+.Log4 {
+  color: black;
+  background: lightgoldenrodyellow;
+}
+
+.Log5 {
+  color: black;
+  background: lightgray;
+}
+
+.ByteVecSlice {
+  color: black;
+  background: lightgreen;
+}
+
+.ByteVecToAddress {
+  color: black;
+  background: lightgrey;
+}
+
+.Encode {
+  color: black;
+  background: lightpink;
+}
+
+.Zeros {
+  color: black;
+  background: lightsalmon;
+}
+
+.U256To1Byte {
+  color: black;
+  background: lightseagreen;
+}
+
+.U256To2Byte {
+  color: black;
+  background: lightskyblue;
+}
+
+.U256To4Byte {
+  color: black;
+  background: lightslategrey;
+}
+
+.U256To8Byte {
+  color: white;
+  background: darkblue;
+}
+
+.U256To16Byte {
+  color: white;
+  background: darkorange;
+}
+
+.U256To32Byte {
+  color: white;
+  background: darkred;
+}
+
+.U256From1Byte {
+  color: white;
+  background: darkmagenta;
+}
+
+.U256From2Byte {
+  color: white;
+  background: darkslateblue;
+}
+
+.U256From4Byte {
+  color: white;
+  background: darkviolet;
+}
+
+.U256From8Byte {
+  color: white;
+  background: darkcyan;
+}
+
+.U256From16Byte {
+  color: white;
+  background: darkmagenta;
+}
+
+.U256From32Byte {
+  color: lightblue;
+  background: black;
+}
+
+.EthEcRecover {
+  color: lightseagreen;
+  background: darkblue;
+}
+
+.Log6 {
+  color: lightcyan;
+  background: darkblue;
+}
+
+.Log7 {
+  color: lightpink;
+  background: darkblue;
+}
+
+.Log8 {
+  color: lightgrey;
+  background: darkblue;
+}
+
+.Log9 {
+  color: lightpink;
+  background: darkblue;
+}
+
+.ContractId {
+  color: darkblue;
+  background: orange;
+}
+
+.ContractIdToAddress {
+  color: lightgrey;
+  background: black;
+}
+
+.LoadLocalByIndex {
+  color: lightgreen;
+  background: black;
+}
+
+.StoreLocalByIndex {
+  color: lightskyblue;
+  background: black;
+}
+
+.Dup {
+  color: lightsteelblue;
+  background: black;
+}
+
+.AssertWithErrorCode {
+  color: lime;
+  background: darkblue;
+}
+
+.Swap {
+  color: maroon;
+  background: yellow;
+}
+
+.BlockHash {
+  color: greenyellow;
+  background: black;
+}
+
+.DEBUG {
+  color: green;
+  background: darkorange;
+}
+
+.TxGasPrice {
+  color: green;
+  background: darkgoldenrod;
+}
+
+.TxGasAmount {
+  color: yellow;
+  background: darkslategrey;
+}
+
+.TxGasFee {
+  color: white;
+  background: darkolivegreen
+}
+
+.I256Exp {
+  color: yellow;
+  background: darkolivegreen;
+}
+
+.U256Exp {
+  color: yellow;
+  background: darkgreen;
+}
+
+.U256ModExp {
+  color: yellow;
+  background: darkblue;
+}
+
+.VerifyBIP340Schnorr {
+  color: lightblue;
+  background: firebrick;
+}
+
+.GetSegragatedSignature {
+  color: firebrick;
+  background: lightblue;
+}
+
+.MulModN {
+  color: magenta;
+  background: wheat;
+}
+
+.AddModN {
+  color: wheat;
+  background: magenta;
+}
+
+.U256ToString {
+  color: black;
+  background: brown;
+}
+
+.I256ToString {
+  color: black;
+  background: gold;
+}
+
+.BoolToString {
+  color: black;
+  background: silver;
+}
+
+.BoolToString {
+  color: brown;
+  background: black;
+}
+
+.LoadMutField {
+  color: silver;
+  background: black;
+}
+
+.StoreMutField {
+  color: gold;
+  background: black;
+}
+
+.ApproveAlph {
+  color: blue;
+  background: yellow;
+}
+
+.ApproveToken {
+  color: green;
+  background: yellow;
+}
+
+.AlphRemaining {
+  color: yellow;
+  background: green;
+}
+
+.TokenRemaining {
+  color: yellow;
+  background: blue;
+}
+
+.IsPaying {
+  color: blueviolet;
+  background: yellow;
+}
+
+.TransferAlph {
+  color: gray;
+  background: blue;
+}
+
+.TransferAlphFromSelf {
+  color: darkmagenta;
+  background: lightblue;
+}
+
+.TransferAlphToSelf {
+  color: white;
+  background: darkmagenta;
+}
+
+.TransferToken {
+  color: deeppink;
+  background: darkblue;
+}
+
+.TransferTokenFromSelf {
+  color: lightseagreen;
+  background: darkslategrey;
+}
+
+.TransferTokenToSelf {
+  color: darkgray;
+  background: black;
+}
+
+.CreateContract {
+  color: black;
+  background: darkgrey;
+}
+
+.CreateContractWithToken {
+  color: black;
+  background: lightgray;
+}
+
+.CopyCreateContract {
+  color: black;
+  background: lightyellow;
+}
+
+.DestroySelf {
+  color: black;
+  background: lightsteelblue;
+}
+
+.SelfContractId {
+  color: black;
+  background: lightslategray;
+}
+
+.SelfAddress {
+  color: black;
+  background: lightseagreen;
+}
+
+.CallerContractId {
+  color: black;
+  background: lightpink;
+}
+
+.CallerAddress {
+  color: black;
+  background: lightgreen;
+}
+
+.IsCallerFromTxScript {
+  color: black;
+  background: lightgoldenrodyellow;
+}
+
+.CallerInitialStateHash {
+  color: black;
+  background: lightcyan;
+}
+
+.CallerCodeHash {
+  color: black;
+  background: lightcoral;
+}
+
+.ContractInitialStateHash {
+  color: white;
+  background: black;
+}
+
+.ContractInitialCodeHash {
+  color: lightblue;
+  background: darkgreen;
+}
+
+.MigrateSimple {
+  color: darkgreen;
+  background: lightblue;
+}
+
+.MigrateWithFields {
+  color: yellow;
+  background: maroon;
+}
+
+.CopyCreateContractWithToken {
+  color: maroon;
+  background: yellow;
+}
+
+.BurnToken {
+  color: darkblue;
+  background: wheat;
+}
+
+.LockApprovedAssets {
+  color: wheat;
+  background: darkblue;
+}
+
+.CreateSubContract {
+  color: orange;
+  background: green;
+}
+
+.CreateSubContractWithToken {
+  color: yellow;
+  background: purple;
+}
+
+.CopyCreateSubContract {
+  color: purple;
+  background: yellow;
+}
+
+.CopyCreateSubContractWithToken {
+  color: green;
+  background: orange;
+}
+
+.LoadMutFieldByIndex {
+  color: yellow;
+  background: red;
+}
+
+.StoreMutFieldByIndex {
+  color: mediumslateblue;
+  background: navajowhite;
+}
+
+.ContractExists {
+  color: white;
+  background: black;
+}
+.CreateContractAndTransferToken {
+  color: yellow;
+  background: midnightblue;
+}
+
+.CopyCreateContractAndTransferToken {
+  color: yellowgreen;
+  background: blue;
+}
+
+.CreateSubContractAndTransferToken {
+  color: blue;
+  background: lightgoldenrodyellow;
+}
+
+.CopyCreateSubContractAndTransferToken {
+  color: mediumvioletred;
+  background: whitesmoke;
+}
+
+.NullContractAddress {
+  color: lawngreen;
+  background: black;
+}
+
+.SubContractId {
+  color: white;
+  background: darkblue;
+}
+
+.SubContractIdOf {
+  color: lightblue;
+  background: black;
+}
+
+.AlphTokenId {
+  color: yellowgreen;
+  background: darkblue;
+}
+
+.LoadImmField {
+  color: yellow;
+  background: black;
+}
+
+.LoadImmFieldByInde {
+  color: white;
+  background: black;
+}
+
+.OutputRefHint {
+  color: white;
+  background: darkred;
+}
+
+.OutputRefKey {
+  color: white;
+  background: darkgreen;
+}
+
+.ScriptType {
+  color: black;
+  background: yellow;
+}
+
+.OutputType {
+  color: yellow;
+  background: black;
+}
+
+.PublicKey {
+  color: white;
+  background: darkcyan;
+}
+
+.PublicKeyIndex {
+  color: black;
+  background: pink;
+}
+
+.PublicKeyHash {
+  color: white;
+  background: darkcyan;
+}
+
+.PublicKeyHashInverse {
+  color: lightcyan;
+  background: black;
+}
+
+.MultiSigTotalKeys {
+  color: black;
+  background: pink;
+}
+
+.MultiSigRequiredKeys {
+  color: black;
+  background: pink;
+}
+
+.Amount {
+  color: blue;
+  background: cyan;
+}
+
+.LockScript {
+  color: white;
+  background: darkslategrey;
+}
+
+.LockTime {
+  color: white;
+  background: darkred;
+}
+
+.TokensLength {
+  color: white;
+  background: green;
+}
+
+.Tokens {
+  color: white;
+  background: darkblue;
+}
+
+.AdditionalData {
+  color: black;
+  background: gold;
 }
 
 .TxFlag {

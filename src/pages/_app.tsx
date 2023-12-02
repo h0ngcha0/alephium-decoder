@@ -1,8 +1,7 @@
-import React, { Component } from 'react'
+import React from 'react'
 import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
 import { ThemeProvider, StyledEngineProvider, createTheme, adaptV4Theme } from '@mui/material/styles'
-//import blue from '@mui/material/colors/blue'
 import Helmet from 'react-helmet'
 import 'flexboxgrid'
 

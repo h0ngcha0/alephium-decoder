@@ -1,6 +1,6 @@
 {
   "name": "alph-decoder",
-  "version": "0.1.0",
+  "version": "0.0.3",
   "license": "GPL",
   "scripts": {
     "dev": "next dev",
@@ -27,7 +27,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@h0ngcha0/web3": "^0.22.7",
+    "@h0ngcha0/web3": "^0.22.10",
     "@mui/icons-material": "^5.14.18",
     "@mui/material": "^5.14.18",
     "@next/font": "13.1.4",

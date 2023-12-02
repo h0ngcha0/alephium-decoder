@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react'
 
 import Loading from './Loading'
-import BitcoinIcon from '../assets/icons/BitcoinIcon'
 import TransactionRawComponent from './TransactionRawComponent'
 import axios from 'axios'
 import { Link } from '@mui/material'
@@ -10,6 +9,7 @@ import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
+import AlephiumLogo from '../assets/alephium-logo.png'
 
 interface TransactionContainerProps {
   transactionId?: string
@@ -102,9 +102,10 @@ export const TransactionContainer: React.FunctionComponent<TransactionContainerP
     <div className="container">
       <div className={'application-definition'}>
       <div style={{ marginTop: '16px', textAlign: 'center' }}>
+        <img src={`${AlephiumLogo.src}`} style={{ maxWidth: '300px', marginBottom: '20px' }} />
         <Paper
           component="form"
-          style={{ maxWidth: '500px', textAlign: 'center', margin: '0 auto', boxShadow: '2px 2px 2px grey' }}
+          style={{ maxWidth: '500px', textAlign: 'center', margin: '0 auto', boxShadow: '2px 2px 2px 2px grey' }}
           sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400 }}
         >
           <IconButton sx={{ p: '10px' }} aria-label="menu">
@@ -128,7 +129,7 @@ export const TransactionContainer: React.FunctionComponent<TransactionContainerP
               <br/>
               <span>
                 {
-                    state.transactionId && (
+                    state.rawTransaction && (
                       <Link
                         href={`https://explorer.alephium.org/transactions/${state.transactionId}`}
                         target="_blank"

@@ -1389,3 +1389,38 @@ a.image {
   color: white;
   background: darkred;
 }
+
+.Method0 {
+  color: black;
+  background: yellow;
+}
+
+.Method1 {
+  color: white;
+  background: darkred;
+}
+
+.Method2 {
+  color: white;
+  background: black;
+}
+
+.Method3 {
+  color: white;
+  background: red;
+}
+
+.Method4 {
+  color: blue;
+  background: cyan;
+}
+
+.FieldLength {
+  color: white;
+  background: green;
+}
+
+.MethodIndexes {
+  color: white;
+  background: blueviolet;
+}

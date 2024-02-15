@@ -2,8 +2,7 @@ import _ from 'lodash'
 import React from 'react'
 import Typography from '@mui/material/Typography'
 import Tooltip from '@mui/material/Tooltip'
-import { codec } from '@h0ngcha0/web3'
-import { ScriptCodec } from '@h0ngcha0/web3/dist/src/codec/script-codec'
+import { codec } from '@alephium/web3'
 
 interface TransactionRawComponentProps {
   txRaw: string
@@ -211,7 +210,7 @@ export const TransactionRawComponent: React.FunctionComponent<TransactionRawComp
   )
 }
 
-function showScript(decoded: codec.Transaction, scriptCodec: ScriptCodec) {
+function showScript(decoded: codec.Transaction, scriptCodec: codec.script.ScriptCodec) {
   return decoded.unsigned.statefulScript.option !== 0 ? (
     <Tooltip title="StatefulScriptValue" arrow>
       <span className="StatefulScriptValue">

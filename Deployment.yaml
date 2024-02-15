@@ -20,7 +20,7 @@ spec:
         env:
         - name: JAVA_OPTS
           value: -Xms256m -Xmx3072m
-        image: docker.io/liuhongchao/alph-decoder:v0.0.6
+        image: docker.io/liuhongchao/alph-decoder:v0.0.7
         imagePullPolicy: Always
         name: alph-decoder
         terminationMessagePath: /dev/termination-log

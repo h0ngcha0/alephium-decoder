@@ -16,12 +16,12 @@ const theme = createTheme(
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <React.Fragment>
-        <Helmet key="helmet" defaultTitle="alph.reverse" titleTemplate="%s - alph.reverse" />
-        <StyledEngineProvider injectFirst>
-          <ThemeProvider theme={theme}>
-            <Component {...pageProps} />
-          </ThemeProvider>
-        </StyledEngineProvider>
-      </React.Fragment>
+      <Helmet key="helmet" defaultTitle="Alephium Decoder" titleTemplate="%s - Alephium Decoder" />
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <Component {...pageProps} />
+        </ThemeProvider>
+      </StyledEngineProvider>
+    </React.Fragment>
   )
 }

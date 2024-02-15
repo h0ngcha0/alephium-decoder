@@ -7,10 +7,8 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import { codec } from '@h0ngcha0/web3'
-import { DecodedCompactInt } from '@h0ngcha0/web3/dist/src/codec'
+import { codec } from '@alephium/web3'
 import { Paper } from '@mui/material'
-import { HalfDecodedContract } from '@h0ngcha0/web3/dist/src/codec/contract-codec'
 
 interface ContractBytecodeComponentProps {
   bytecode: string
@@ -75,7 +73,7 @@ export const ContractBytecodeComponent: React.FunctionComponent<ContractBytecode
   )
 }
 
-function showMethodIndexes(inputs: DecodedCompactInt[]) {
+function showMethodIndexes(inputs: codec.DecodedCompactInt[]) {
   const { compactUnsignedIntCodec } = codec
   return (
     <>
@@ -89,7 +87,7 @@ function showMethodIndexes(inputs: DecodedCompactInt[]) {
           {
             inputs.map((input, index) => {
               return (
-                <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }} key={index}>
                   <TableCell>
                     {index}
                   </TableCell>
@@ -111,7 +109,7 @@ function showMethodIndexes(inputs: DecodedCompactInt[]) {
   )
 }
 
-function getRawMethods(halfDecoded: HalfDecodedContract) {
+function getRawMethods(halfDecoded: codec.contract.HalfDecodedContract) {
   const methodIndexes = halfDecoded.methodIndexes.value.map((v) => codec.compactUnsignedIntCodec.toU32(v))
   const methods: Buffer[] = []
   for (let i = 0, start = 0; i < methodIndexes.length; i++) {
@@ -130,7 +128,7 @@ function showRawMethods(rawMethods: Buffer[]) {
       {
         rawMethods.map((rawMethod, index) => {
           return (
-            <Tooltip title={`Method ${index}`} arrow >
+            <Tooltip title={`Method ${index}`} key={index} arrow >
               <span className={`Method${index % 5}`}>{rawMethod.toString('hex')}</span>
             </Tooltip>
           )
@@ -140,7 +138,7 @@ function showRawMethods(rawMethods: Buffer[]) {
   )
 }
 
-function showMethodsDetails(halfDecoded: HalfDecodedContract, rawMethods0?: Buffer[]) {
+function showMethodsDetails(halfDecoded: codec.contract.HalfDecodedContract, rawMethods0?: Buffer[]) {
   const rawMethods = rawMethods0 ?? getRawMethods(halfDecoded)
 
   return (
@@ -163,7 +161,7 @@ function showMethodsDetails(halfDecoded: HalfDecodedContract, rawMethods0?: Buff
             rawMethods.map((rawMethod, index) => {
               const method = codec.methodCodec.decode(rawMethod)
               return (
-                <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }} key={index}>
                   <TableCell>
                     {index}
                   </TableCell>

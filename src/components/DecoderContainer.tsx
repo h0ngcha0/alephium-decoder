@@ -10,7 +10,7 @@ import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import AlephiumLogo from '../assets/alephium-logo.png'
 import ScrollableTabs from './ScrollableTabs'
-import { contractIdFromAddress, groupOfAddress } from '@h0ngcha0/web3'
+import { contractIdFromAddress, groupOfAddress } from '@alephium/web3'
 import ContractBytecodeComponent from './ContractBytecodeComponent'
 
 interface DecoderContainerProps {
@@ -129,7 +129,7 @@ export const DecoderContainer: React.FunctionComponent<DecoderContainerProps> = 
             <InputBase
               value={state.transactionIdOrContractAddress}
               sx={{ ml: 1, flex: 1 }}
-              placeholder="Search Transaction or Contract"
+              placeholder="Search Tx or Contract Address"
               inputProps={{ 'aria-label': 'search transaction or contract' }}
               onChange={(newValue) => handleSetTransactionIdOrContractAddress(newValue.target.value)}
               onKeyDown={(e) => {

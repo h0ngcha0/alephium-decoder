@@ -12,6 +12,7 @@ import AlephiumLogo from '../assets/alephium-logo.png'
 import ScrollableTabs from './ScrollableTabs'
 import { contractIdFromAddress, groupOfAddress } from '@alephium/web3'
 import ContractBytecodeComponent from './ContractBytecodeComponent'
+import { codec } from '@alephium/web3'
 
 interface DecoderContainerProps {
   transactionIdOrContractAddress?: string
@@ -25,13 +26,13 @@ interface DecoderContainerState {
   error: string | undefined
 }
 
-async function fetchTransaction(txId: string): Promise<{ raw: string }> {
+async function fetchTransaction(txId: string): Promise<any> {
   return (await axios.get(`https://alephium-0a5dc.alephium.org/transactions/details/${txId}`)).data
 }
 
 async function fetchContractBytecode(contractAddress: string): Promise<{ bytecode: string }> {
   const group = groupOfAddress(contractAddress)
-  return (await axios.get(`https://alephium-0a5dc.alephium.org/contracts/${contractAddress}/state?group=${group}`)).data
+  return (await axios.get(`https://node.mainnet.alephium.org/contracts/${contractAddress}/state?group=${group}`)).data
 }
 
 function isContractAddress(transactionOrContract: string): boolean {
@@ -84,12 +85,13 @@ export const DecoderContainer: React.FunctionComponent<DecoderContainerProps> = 
     } else {
       fetchTransaction(transactionIdOrContractAddress)
         .then((response) => {
+          const rawTx = codec.transactionCodec.encodeApiTransaction(response).toString('hex')
           setState({
             ...state,
             loading: false,
             error: undefined,
             transactionIdOrContractAddress: transactionIdOrContractAddress,
-            rawTransaction: response.raw,
+            rawTransaction: rawTx,
             contractBytecode: undefined
           })
         })

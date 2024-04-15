@@ -9,6 +9,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { codec } from '@alephium/web3'
 import { Paper } from '@mui/material'
+import { Buffer } from 'buffer/'
 
 interface ContractBytecodeComponentProps {
   bytecode: string

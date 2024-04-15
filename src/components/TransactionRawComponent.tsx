@@ -3,6 +3,7 @@ import React from 'react'
 import Typography from '@mui/material/Typography'
 import Tooltip from '@mui/material/Tooltip'
 import { codec } from '@alephium/web3'
+import { Buffer } from 'buffer/'
 
 interface TransactionRawComponentProps {
   txRaw: string

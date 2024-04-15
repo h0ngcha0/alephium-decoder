@@ -20,7 +20,7 @@ spec:
         env:
         - name: JAVA_OPTS
           value: -Xms256m -Xmx3072m
-        image: docker.io/liuhongchao/alph-decoder:v0.0.7
+        image: docker.io/liuhongchao/alph-decoder:v0.0.8
         imagePullPolicy: Always
         name: alph-decoder
         terminationMessagePath: /dev/termination-log
@@ -55,10 +55,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - alephium.nioctib.tech
+    - alephium-decoder.softfork.se
     secretName: alph-decoder-it-tls
   rules:
-  - host: alephium.nioctib.tech   # For this to work, A record needs to be created in the DNS service
+  - host: alephium-decoder.softfork.se   # For this to work, A record needs to be created in the DNS service
     http:
       paths:
       - path: /

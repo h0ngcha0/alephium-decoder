@@ -7,9 +7,8 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import { codec } from '@alephium/web3'
+import { binToHex, codec, hexToBinUnsafe } from '@alephium/web3'
 import { Paper } from '@mui/material'
-import { Buffer } from 'buffer/'
 
 interface ContractBytecodeComponentProps {
   bytecode: string
@@ -19,7 +18,7 @@ interface ContractBytecodeComponentProps {
 export const ContractBytecodeComponent: React.FunctionComponent<ContractBytecodeComponentProps> = (props) => {
   const { bytecode, breakDown } = props
   const { compactSignedIntCodec, compactUnsignedIntCodec, ArrayCodec, contract } = codec
-  const decodedContract = contract.contractCodec.decode(Buffer.from(bytecode, 'hex'))
+  const decodedContract = contract.contractCodec.decode(hexToBinUnsafe(bytecode))
   const compactUnsignedIntsCodec = new ArrayCodec(compactUnsignedIntCodec)
   const rawMethods = getRawMethods(decodedContract)
 
@@ -47,7 +46,7 @@ export const ContractBytecodeComponent: React.FunctionComponent<ContractBytecode
           <span className="FieldLength">{encodeToString(compactSignedIntCodec, decodedContract.fieldLength)}</span>
         </Tooltip>
         <div>
-          The number of fields in this contract, in this case <b>{compactUnsignedIntCodec.toU32(decodedContract.fieldLength)}</b>.
+          The number of fields in this contract, in this case <b>{compactSignedIntCodec.toI32(decodedContract.fieldLength)}</b>.
         </div>
         <br />
         <b>Method Indexes</b>
@@ -57,7 +56,7 @@ export const ContractBytecodeComponent: React.FunctionComponent<ContractBytecode
         </Tooltip>
         <div>
           Encoded method indexes. For efficiency reasons, all methods are encoded in a single byte array. The method index <b>n</b> indicates the ending offset of method <b>n</b> in this byte array.
-          The initial bytes <span className="NetworkId">{encodeToString(compactUnsignedIntCodec, decodedContract.methodIndexes.length)}</span> represent the number of method indexes (in this case <b>{compactUnsignedIntCodec.toU32(decodedContract.methodIndexes.length)}</b>). All method indexes are shown below:
+          The initial bytes <span className="NetworkId">{encodeToString(compactUnsignedIntCodec, decodedContract.methodIndexes.length)}</span> represent the number of method indexes (in this case <b>{compactSignedIntCodec.toI32(decodedContract.methodIndexes.length)}</b>). All method indexes are shown below:
         </div>
         <br />
         {
@@ -75,7 +74,7 @@ export const ContractBytecodeComponent: React.FunctionComponent<ContractBytecode
 }
 
 function showMethodIndexes(inputs: codec.DecodedCompactInt[]) {
-  const { compactUnsignedIntCodec } = codec
+  const { compactSignedIntCodec } = codec
   return (
     <>
       <TableContainer component={Paper}>
@@ -94,11 +93,11 @@ function showMethodIndexes(inputs: codec.DecodedCompactInt[]) {
                   </TableCell>
                   <TableCell>
                     <Tooltip title={"MethodIndex"} arrow>
-                      <span className={"NetworkId"}>{encodeToString(compactUnsignedIntCodec, input)}</span>
+                      <span className={"NetworkId"}>{encodeToString(compactSignedIntCodec, input)}</span>
                     </Tooltip>
                   </TableCell>
                   <TableCell>
-                    {compactUnsignedIntCodec.toU32(input)}
+                    {compactSignedIntCodec.toI32(input)}
                   </TableCell>
                 </TableRow>
               )
@@ -111,8 +110,8 @@ function showMethodIndexes(inputs: codec.DecodedCompactInt[]) {
 }
 
 function getRawMethods(halfDecoded: codec.contract.HalfDecodedContract) {
-  const methodIndexes = halfDecoded.methodIndexes.value.map((v) => codec.compactUnsignedIntCodec.toU32(v))
-  const methods: Buffer[] = []
+  const methodIndexes = halfDecoded.methodIndexes.value.map((v) => codec.compactSignedIntCodec.toI32(v))
+  const methods: Uint8Array[] = []
   for (let i = 0, start = 0; i < methodIndexes.length; i++) {
     const end = methodIndexes[i]
     const method = halfDecoded.methods.slice(start, end)
@@ -123,14 +122,14 @@ function getRawMethods(halfDecoded: codec.contract.HalfDecodedContract) {
   return methods
 }
 
-function showRawMethods(rawMethods: Buffer[]) {
+function showRawMethods(rawMethods: Uint8Array[]) {
   return (
     <>
       {
         rawMethods.map((rawMethod, index) => {
           return (
             <Tooltip title={`Method ${index}`} key={index} arrow >
-              <span className={`Method${index % 5}`}>{rawMethod.toString('hex')}</span>
+              <span className={`Method${index % 5}`}>{binToHex(rawMethod)}</span>
             </Tooltip>
           )
         })
@@ -139,7 +138,7 @@ function showRawMethods(rawMethods: Buffer[]) {
   )
 }
 
-function showMethodsDetails(halfDecoded: codec.contract.HalfDecodedContract, rawMethods0?: Buffer[]) {
+function showMethodsDetails(halfDecoded: codec.contract.HalfDecodedContract, rawMethods0?: Uint8Array[]) {
   const rawMethods = rawMethods0 ?? getRawMethods(halfDecoded)
 
   return (
@@ -148,7 +147,7 @@ function showMethodsDetails(halfDecoded: codec.contract.HalfDecodedContract, raw
         showRawMethods(rawMethods)
       }
       <div>
-        All methods in this contract are encoded in a single byte array, seperated by method indexes. This contract has <b>{codec.compactUnsignedIntCodec.toU32(halfDecoded.methodIndexes.length)}</b> methods. Each method consists a set of instructions, as shown below:
+        All methods in this contract are encoded in a single byte array, seperated by method indexes. This contract has <b>{codec.compactSignedIntCodec.toI32(halfDecoded.methodIndexes.length)}</b> methods. Each method consists a set of instructions, as shown below:
       </div>
       <br />
 
@@ -221,11 +220,11 @@ function showInstrs(instrs: codec.Instr[]) {
 }
 
 function byteToString(input: number): string {
-  return Buffer.from([input]).toString('hex')
+  return binToHex(Uint8Array.from([input]))
 }
 
 function encodeToString<T>(codec: codec.Codec<T>, input: T) {
-  return codec.encode(input).toString('hex')
+  return binToHex(codec.encode(input))
 }
 
 function getInstrName(code: number): string | undefined {

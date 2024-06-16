@@ -10,7 +10,7 @@ import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import AlephiumLogo from '../assets/alephium-logo.png'
 import ScrollableTabs from './ScrollableTabs'
-import { contractIdFromAddress, groupOfAddress } from '@alephium/web3'
+import { binToHex, contractIdFromAddress, groupOfAddress } from '@alephium/web3'
 import ContractBytecodeComponent from './ContractBytecodeComponent'
 import { codec } from '@alephium/web3'
 
@@ -27,7 +27,7 @@ interface DecoderContainerState {
 }
 
 async function fetchTransaction(txId: string): Promise<any> {
-  return (await axios.get(`https://alephium-0a5dc.alephium.org/transactions/details/${txId}`)).data
+  return (await axios.get(`https://node.mainnet.alephium.org/transactions/details/${txId}`)).data
 }
 
 async function fetchContractBytecode(contractAddress: string): Promise<{ bytecode: string }> {
@@ -85,7 +85,7 @@ export const DecoderContainer: React.FunctionComponent<DecoderContainerProps> = 
     } else {
       fetchTransaction(transactionIdOrContractAddress)
         .then((response) => {
-          const rawTx = codec.transactionCodec.encodeApiTransaction(response).toString('hex')
+          const rawTx = binToHex(codec.transactionCodec.encodeApiTransaction(response))
           setState({
             ...state,
             loading: false,

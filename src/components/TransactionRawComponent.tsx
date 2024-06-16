@@ -2,8 +2,7 @@ import _ from 'lodash'
 import React from 'react'
 import Typography from '@mui/material/Typography'
 import Tooltip from '@mui/material/Tooltip'
-import { codec } from '@alephium/web3'
-import { Buffer } from 'buffer/'
+import { binToHex, codec, hexToBinUnsafe } from '@alephium/web3'
 
 interface TransactionRawComponentProps {
   txRaw: string
@@ -17,7 +16,7 @@ export const TransactionRawComponent: React.FunctionComponent<TransactionRawComp
   const assetOutputsCodec = new ArrayCodec(assetOutput.assetOutputCodec)
   const contractOutputRefsCodec = new ArrayCodec(contractOutputRefCodec)
   const { scriptCodec } = script
-  const decoded: codec.Transaction = codec.transactionCodec.decode(Buffer.from(txRaw, 'hex'))
+  const decoded: codec.Transaction = codec.transactionCodec.decode(hexToBinUnsafe(txRaw))
   const outputCodec = new EitherCodec(assetOutput.assetOutputCodec, contractOutput.contractOutputCodec)
   const outputsCodec = new ArrayCodec(outputCodec)
   const signaturesCodec = new ArrayCodec(signatureCodec)
@@ -221,7 +220,7 @@ function showScript(decoded: codec.Transaction, scriptCodec: codec.script.Script
   ) : undefined
 }
 
-function showMethods(script: codec.script.Script) {
+function showMethods(script: codec.script.DecodedScript) {
   return (
     <>
       {
@@ -296,7 +295,7 @@ function showInputs(inputs: codec.Input[]) {
                 <span className={"OutputRefHint"}>{encodeToString(codec.signedIntCodec, input.outputRef.hint)}</span>
               </Tooltip>
               <Tooltip title={"OutputRefKey"} arrow>
-                <span className={"OutputRefKey"}>{input.outputRef.key.toString('hex')}</span>
+                <span className={"OutputRefKey"}>{binToHex(input.outputRef.key)}</span>
               </Tooltip>
               {
                 showUnlockScript(input.unlockScript)
@@ -321,10 +320,10 @@ function showUnlockScript(unlockScript: codec.unlockScript.UnlockScript) {
         unlockScript.scriptType === 0 ? (
           <>
             <Tooltip title={"PublicKey"} arrow>
-              <span className={"PublicKey"}>{(unlockScript.script as codec.unlockScript.P2PKH).publicKey.toString('hex')}</span>
+              <span className={"PublicKey"}>{binToHex((unlockScript.script as codec.unlockScript.P2PKH).publicKey)}</span>
             </Tooltip>
             <br />
-            This is a <u>P2PKH</u> input, the public key is <span className={"PublicKey"}>{(unlockScript.script as codec.unlockScript.P2PKH).publicKey.toString('hex')}</span>
+            This is a <u>P2PKH</u> input, the public key is <span className={"PublicKey"}>{binToHex((unlockScript.script as codec.unlockScript.P2PKH).publicKey)}</span>
           </>
         ) : unlockScript.scriptType === 1 ? (
           <>
@@ -333,11 +332,11 @@ function showUnlockScript(unlockScript: codec.unlockScript.UnlockScript) {
             </Tooltip>
 
             {
-              (unlockScript.script as codec.unlockScript.P2MPKH).publicKeys.value.map((publicKey, index) => {
+              (unlockScript.script as codec.unlockScript.P2MPKH).publicKeys.value.map((publicKey) => {
                 return (
                   <>
                     <Tooltip title={"PublicKey"} arrow>
-                      <span className={"PublicKey"}>{publicKey.publicKey.publicKey.toString('hex')}</span>
+                      <span className={"PublicKey"}>{binToHex(publicKey.publicKey.publicKey)}</span>
                     </Tooltip>
                     <Tooltip title={"PublicKeyIndex"} arrow>
                       <span className={"PublicKeyIndex"}>{encodeToString(codec.compactUnsignedIntCodec, publicKey.index)}</span>
@@ -353,7 +352,7 @@ function showUnlockScript(unlockScript: codec.unlockScript.UnlockScript) {
               (unlockScript.script as codec.unlockScript.P2MPKH).publicKeys.value.map((publicKey, index) => {
                 return (
                   <>
-                    <span className={"PublicKey"}>{publicKey.publicKey.publicKey.toString('hex')}</span><span className={"PublicKeyIndex"}>{encodeToString(codec.compactUnsignedIntCodec, publicKey.index)}</span>
+                    <span className={"PublicKey"}>{binToHex(publicKey.publicKey.publicKey)}</span><span className={"PublicKeyIndex"}>{encodeToString(codec.compactUnsignedIntCodec, publicKey.index)}</span>
                     <br />
                   </>
                 )
@@ -429,14 +428,14 @@ function showAssetOutputs(fixedOutputs: codec.assetOutput.AssetOutput[]) {
             <span className={"ScriptType"}>{byteToString(lockScript.scriptType)}</span>
           </Tooltip>
           <Tooltip title={"PublicKeyHash"} arrow>
-            <span className={"PublicKeyHash"}>{(lockScript.script as codec.lockupScript.PublicKeyHash).publicKeyHash.toString('hex')}</span>
+            <span className={"PublicKeyHash"}>{binToHex((lockScript.script as codec.lockupScript.PublicKeyHash).publicKeyHash)}</span>
           </Tooltip>
         </>
       )
 
       lockScriptDescription = (
         <>
-          This is a <u>P2PKH</u> output, the public key hash is <span className={"PublicKeyHash"}>{(lockScript.script as codec.lockupScript.PublicKeyHash).publicKeyHash.toString('hex')}</span>
+          This is a <u>P2PKH</u> output, the public key hash is <span className={"PublicKeyHash"}>{binToHex((lockScript.script as codec.lockupScript.PublicKeyHash).publicKeyHash)}</span>
         </>
       )
       return result
@@ -455,7 +454,7 @@ function showAssetOutputs(fixedOutputs: codec.assetOutput.AssetOutput[]) {
               return (
                 <>
                   <Tooltip title={"PublicKeyHash"} arrow>
-                    <span className={`${className}`}>{publicKey.publicKeyHash.toString('hex')}</span>
+                    <span className={`${className}`}>{binToHex(publicKey.publicKeyHash)}</span>
                   </Tooltip>
                 </>
               )
@@ -476,7 +475,7 @@ function showAssetOutputs(fixedOutputs: codec.assetOutput.AssetOutput[]) {
               const className = index % 2 === 0 ? "PublicKeyHash" : "PublicKeyHashInverse"
               return (
                 <>
-                  <span className={`${className}`}>{publicKey.publicKeyHash.toString('hex')}</span>
+                  <span className={`${className}`}>{binToHex(publicKey.publicKeyHash)}</span>
                 </>
               )
             })
@@ -493,14 +492,14 @@ function showAssetOutputs(fixedOutputs: codec.assetOutput.AssetOutput[]) {
             <span className={"ScriptType"}>{byteToString(lockScript.scriptType)}</span>
           </Tooltip>
           <Tooltip title={"P2SHScriptHash"} arrow>
-            <span className={"P2SHScriptHash"}>{(lockScript.script as codec.lockupScript.P2SH).scriptHash.toString('hex')}</span>
+            <span className={"P2SHScriptHash"}>{binToHex((lockScript.script as codec.lockupScript.P2SH).scriptHash)}</span>
           </Tooltip>
         </>
       )
 
       lockScriptDescription = (
         <>
-          This is a <u>P2SH</u> output, the script hash is <span className={"P2SHScriptHash"}>{(lockScript.script as codec.lockupScript.P2SH).scriptHash.toString('hex')}</span>
+          This is a <u>P2SH</u> output, the script hash is <span className={"P2SHScriptHash"}>{binToHex((lockScript.script as codec.lockupScript.P2SH).scriptHash)}</span>
         </>
       )
       return result
@@ -511,14 +510,14 @@ function showAssetOutputs(fixedOutputs: codec.assetOutput.AssetOutput[]) {
             <span className={"ScriptType"}>{byteToString(lockScript.scriptType)}</span>
           </Tooltip>
           <Tooltip title={"P2CContractId"} arrow>
-            <span className={"P2CContractId"}>{(lockScript.script as codec.lockupScript.P2C).contractId.toString('hex')}</span>
+            <span className={"P2CContractId"}>{binToHex((lockScript.script as codec.lockupScript.P2C).contractId)}</span>
           </Tooltip>
         </>
       )
 
       lockScriptDescription = (
         <>
-          This is a <u>P2C</u> output, the contract id is <span className={"P2CContractId"}>{(lockScript.script as codec.lockupScript.P2C).contractId.toString('hex')}</span>
+          This is a <u>P2C</u> output, the contract id is <span className={"P2CContractId"}>{binToHex((lockScript.script as codec.lockupScript.P2C).contractId)}</span>
         </>
       )
       return result
@@ -541,7 +540,7 @@ function showAssetOutputs(fixedOutputs: codec.assetOutput.AssetOutput[]) {
               </Tooltip>
               {showLockScript(output.lockupScript)}
               <Tooltip title={"LockTime"} arrow>
-                <span className={"LockTime"}>{output.lockTime.toString('hex')}</span>
+                <span className={"LockTime"}>{binToHex(output.lockTime)}</span>
               </Tooltip>
               <Tooltip title={"Tokens"} arrow>
                 <span className={"Tokens"}>{encodeToString(codec.token.tokensCodec, output.tokens.value)}</span>
@@ -574,7 +573,7 @@ function showContractInputs(contractOutputRefs: codec.ContractOutputRef[]) {
                 <span className={"OutputRefHint"}>{encodeToString(codec.signedIntCodec, contractOutputRef.hint)}</span>
               </Tooltip>
               <Tooltip title={"OutputRefKey"} arrow>
-                <span className={"OutputRefKey"}>{contractOutputRef.key.toString('hex')}</span>
+                <span className={"OutputRefKey"}>{binToHex(contractOutputRef.key)}</span>
               </Tooltip>
             </>
           )
@@ -596,14 +595,14 @@ function showGeneratedOutputs(outputs: Output[]) {
             <span className={"ScriptType"}>{byteToString(lockScript.scriptType)}</span>
           </Tooltip>
           <Tooltip title={"PublicKeyHash"} arrow>
-            <span className={"PublicKeyHash"}>{(lockScript.script as codec.lockupScript.PublicKeyHash).publicKeyHash.toString('hex')}</span>
+            <span className={"PublicKeyHash"}>{binToHex((lockScript.script as codec.lockupScript.PublicKeyHash).publicKeyHash)}</span>
           </Tooltip>
         </>
       )
 
       lockScriptDescription = (
         <>
-          This is a <u>P2PKH</u> output, the public key hash is <span className={"PublicKeyHash"}>{(lockScript.script as codec.lockupScript.PublicKeyHash).publicKeyHash.toString('hex')}</span>
+          This is a <u>P2PKH</u> output, the public key hash is <span className={"PublicKeyHash"}>{binToHex((lockScript.script as codec.lockupScript.PublicKeyHash).publicKeyHash)}</span>
         </>
       )
       return result
@@ -622,7 +621,7 @@ function showGeneratedOutputs(outputs: Output[]) {
               return (
                 <>
                   <Tooltip title={"PublicKeyHash"} arrow>
-                    <span className={`${className}`}>{publicKey.publicKeyHash.toString('hex')}</span>
+                    <span className={`${className}`}>{binToHex(publicKey.publicKeyHash)}</span>
                   </Tooltip>
                 </>
               )
@@ -643,7 +642,7 @@ function showGeneratedOutputs(outputs: Output[]) {
               const className = index % 2 === 0 ? "PublicKeyHash" : "PublicKeyHashInverse"
               return (
                 <>
-                  <span className={`${className}`}>{publicKey.publicKeyHash.toString('hex')}</span>
+                  <span className={`${className}`}>{binToHex(publicKey.publicKeyHash)}</span>
                 </>
               )
             })
@@ -660,14 +659,14 @@ function showGeneratedOutputs(outputs: Output[]) {
             <span className={"ScriptType"}>{byteToString(lockScript.scriptType)}</span>
           </Tooltip>
           <Tooltip title={"P2SHScriptHash"} arrow>
-            <span className={"P2SHScriptHash"}>{(lockScript.script as codec.lockupScript.P2SH).scriptHash.toString('hex')}</span>
+            <span className={"P2SHScriptHash"}>{binToHex((lockScript.script as codec.lockupScript.P2SH).scriptHash)}</span>
           </Tooltip>
         </>
       )
 
       lockScriptDescription = (
         <>
-          This is a <u>P2SH</u> output, the script hash is <span className={"P2SHScriptHash"}>{(lockScript.script as codec.lockupScript.P2SH).scriptHash.toString('hex')}</span>
+          This is a <u>P2SH</u> output, the script hash is <span className={"P2SHScriptHash"}>{binToHex((lockScript.script as codec.lockupScript.P2SH).scriptHash)}</span>
         </>
       )
       return result
@@ -678,14 +677,14 @@ function showGeneratedOutputs(outputs: Output[]) {
             <span className={"ScriptType"}>{byteToString(lockScript.scriptType)}</span>
           </Tooltip>
           <Tooltip title={"P2CContractId"} arrow>
-            <span className={"P2CContractId"}>{(lockScript.script as codec.lockupScript.P2C).contractId.toString('hex')}</span>
+            <span className={"P2CContractId"}>{binToHex((lockScript.script as codec.lockupScript.P2C).contractId)}</span>
           </Tooltip>
         </>
       )
 
       lockScriptDescription = (
         <>
-          This is a <u>P2C</u> output, the contract id is <span className={"P2CContractId"}>{(lockScript.script as codec.lockupScript.P2C).contractId.toString('hex')}</span>
+          This is a <u>P2C</u> output, the contract id is <span className={"P2CContractId"}>{binToHex((lockScript.script as codec.lockupScript.P2C).contractId)}</span>
         </>
       )
       return result
@@ -714,7 +713,7 @@ function showGeneratedOutputs(outputs: Output[]) {
                     </Tooltip>
                     {showLockScript((output.value as codec.assetOutput.AssetOutput).lockupScript)}
                     <Tooltip title={"LockTime"} arrow>
-                      <span className={"LockTime"}>{(output.value as codec.assetOutput.AssetOutput).lockTime.toString('hex')}</span>
+                      <span className={"LockTime"}>{binToHex((output.value as codec.assetOutput.AssetOutput).lockTime)}</span>
                     </Tooltip>
                     <Tooltip title={"Tokens"} arrow>
                       <span className={"Tokens"}>{encodeToString(codec.token.tokensCodec, (output.value as codec.assetOutput.AssetOutput).tokens.value)}</span>
@@ -732,13 +731,13 @@ function showGeneratedOutputs(outputs: Output[]) {
                       <span className={"Amount"}>{encodeToString(codec.compactUnsignedIntCodec, (output.value as codec.contractOutput.ContractOutput).amount)}</span>
                     </Tooltip>
                     <Tooltip title={"ContractId"} arrow>
-                      <span className={"ContractId"}>{(output.value as codec.contractOutput.ContractOutput).lockupScript.contractId.toString("hex")}</span>
+                      <span className={"ContractId"}>{binToHex((output.value as codec.contractOutput.ContractOutput).lockupScript.contractId)}</span>
                     </Tooltip>
                     <Tooltip title={"Tokens"} arrow>
                       <span className={"Tokens"}>{encodeToString(codec.token.tokensCodec, (output.value as codec.contractOutput.ContractOutput).tokens.value)}</span>
                     </Tooltip>
                     <br />
-                    This is a <u>P2C Output</u>, contract id is <span className={"Amount"}>{(output.value as codec.contractOutput.ContractOutput).lockupScript.contractId.toString("hex")}</span>
+                    This is a <u>P2C Output</u>, contract id is <span className={"Amount"}>{binToHex((output.value as codec.contractOutput.ContractOutput).lockupScript.contractId)}</span>
                     <br />
                   </>
                 ) : undefined
@@ -763,7 +762,7 @@ function showSignatures(signatures: codec.Signature[]) {
               <u>Input Signature {index}: </u>
               <br />
               <Tooltip title={"Signature"} arrow>
-                <span className={`${className}`}>{signature.value.toString('hex')}</span>
+                <span className={`${className}`}>{binToHex(signature.value)}</span>
               </Tooltip>
             </>
           )
@@ -774,11 +773,11 @@ function showSignatures(signatures: codec.Signature[]) {
 }
 
 function byteToString(input: number): string {
-  return Buffer.from([input]).toString('hex')
+  return binToHex(Uint8Array.from([input]))
 }
 
 function encodeToString<T>(codec: codec.Codec<T>, input: T) {
-  return codec.encode(input).toString('hex')
+  return binToHex(codec.encode(input))
 }
 
 function getInstrName(code: number): string | undefined {

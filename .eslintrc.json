@@ -11,7 +11,7 @@
     "no-var": "error",
     "object-curly-spacing": ["error", "always"],
     "react/no-unescaped-entities": "warn",
-    "react/react-in-jsx-scope": "warn"
+    "react/react-in-jsx-scope": "off"
   },
   "parserOptions": {
     "ecmaVersion": 2020,

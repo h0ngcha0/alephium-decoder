@@ -1,17 +1,18 @@
 import React, { useEffect, useState, useCallback } from 'react'
 
+import AlephiumLogo from '../assets/alephium-logo.png'
+import ContractBytecodeComponent from './ContractBytecodeComponent'
+import IconButton from '@mui/material/IconButton';
+import InputBase from '@mui/material/InputBase';
 import Loading from './Loading'
+import Paper from '@mui/material/Paper';
+import ScrollableTabs from './ScrollableTabs'
+import SearchIcon from '@mui/icons-material/Search';
 import TransactionRawComponent from './TransactionRawComponent'
+import TransactionReplayComponent from './TransactionReplayComponent'
 import axios from 'axios'
 import { Link } from '@mui/material'
-import Paper from '@mui/material/Paper';
-import InputBase from '@mui/material/InputBase';
-import IconButton from '@mui/material/IconButton';
-import SearchIcon from '@mui/icons-material/Search';
-import AlephiumLogo from '../assets/alephium-logo.png'
-import ScrollableTabs from './ScrollableTabs'
-import { binToHex, contractIdFromAddress, groupOfAddress } from '@alephium/web3'
-import ContractBytecodeComponent from './ContractBytecodeComponent'
+import { binToHex, contractIdFromAddress, groupOfAddress, hexToBinUnsafe } from '@alephium/web3'
 import { codec } from '@alephium/web3'
 
 interface DecoderContainerProps {
@@ -20,19 +21,27 @@ interface DecoderContainerProps {
 
 interface DecoderContainerState {
   transactionIdOrContractAddress?: string
-  rawTransaction?: string
+  decodedTx?: codec.Transaction
   contractBytecode?: string
   loading: boolean
   error: string | undefined
 }
 
 async function fetchTransaction(txId: string): Promise<any> {
-  return (await axios.get(`https://node.mainnet.alephium.org/transactions/details/${txId}`)).data
+  return (await axios.get(`https://alephium-d13e6g.alephium.org/transactions/details/${txId}`, {
+    headers: {
+      "X-API-KEY": "017941ed977eb0bd94708a5bfcff4ca22a5a7980ccd9677f8a44a019a59655cb"
+    }
+  })).data
 }
 
 async function fetchContractBytecode(contractAddress: string): Promise<{ bytecode: string }> {
   const group = groupOfAddress(contractAddress)
-  return (await axios.get(`https://node.mainnet.alephium.org/contracts/${contractAddress}/state?group=${group}`)).data
+  return (await axios.get(`https://alephium-d13e6g.alephium.org/contracts/${contractAddress}/state?group=${group}`, {
+    headers: {
+      "X-API-KEY": "017941ed977eb0bd94708a5bfcff4ca22a5a7980ccd9677f8a44a019a59655cb"
+    }
+  })).data
 }
 
 function isContractAddress(transactionOrContract: string): boolean {
@@ -47,7 +56,7 @@ function isContractAddress(transactionOrContract: string): boolean {
 export const DecoderContainer: React.FunctionComponent<DecoderContainerProps> = (props) => {
   const [state, setState] = useState<DecoderContainerState>({
     transactionIdOrContractAddress: props.transactionIdOrContractAddress,
-    rawTransaction: undefined,
+    decodedTx: undefined,
     loading: false,
     error: undefined,
   })
@@ -58,7 +67,7 @@ export const DecoderContainer: React.FunctionComponent<DecoderContainerProps> = 
     setState({
       ...state,
       transactionIdOrContractAddress: transactionIdOrContractAddress,
-      rawTransaction: undefined,
+      decodedTx: undefined,
       contractBytecode: undefined,
       loading: true
     })
@@ -70,7 +79,7 @@ export const DecoderContainer: React.FunctionComponent<DecoderContainerProps> = 
             ...state,
             loading: false,
             error: undefined,
-            rawTransaction: undefined,
+            decodedTx: undefined,
             transactionIdOrContractAddress: contractAddress,
             contractBytecode: response.bytecode
           })
@@ -91,7 +100,7 @@ export const DecoderContainer: React.FunctionComponent<DecoderContainerProps> = 
             loading: false,
             error: undefined,
             transactionIdOrContractAddress: transactionIdOrContractAddress,
-            rawTransaction: rawTx,
+            decodedTx: codec.transactionCodec.decode(hexToBinUnsafe(rawTx)),
             contractBytecode: undefined
           })
         })
@@ -152,7 +161,7 @@ export const DecoderContainer: React.FunctionComponent<DecoderContainerProps> = 
               <br />
               <span>
                 {
-                  (state.rawTransaction) && (
+                  (state.decodedTx) && (
                     <Link
                       href={`https://explorer.alephium.org/transactions/${state.transactionIdOrContractAddress}`}
                       target="_blank"
@@ -178,12 +187,18 @@ export const DecoderContainer: React.FunctionComponent<DecoderContainerProps> = 
                     <div style={{ marginTop: '32px', textAlign: 'center' }}>
                       {state.error}
                     </div>
-                  ) : state.rawTransaction ? (
+                  ) : state.decodedTx ? (
                     <ScrollableTabs
-                      tabs={[
-                        { title: 'Raw Transaction', children: <TransactionRawComponent txRaw={state.rawTransaction} breakDown={false} /> },
-                        { title: 'Break Down', children: <TransactionRawComponent txRaw={state.rawTransaction} breakDown={true} /> }
-                      ]}
+                      tabs={
+                        state.decodedTx.unsigned.statefulScript.option === 0 ? [
+                          { title: 'Raw Tx', children: <TransactionRawComponent decoded={state.decodedTx} breakDown={false} /> },
+                          { title: 'Break Down', children: <TransactionRawComponent decoded={state.decodedTx} breakDown={true} /> }
+                        ] : [
+                          { title: 'Raw Tx', children: <TransactionRawComponent decoded={state.decodedTx} breakDown={false} /> },
+                          { title: 'Break Down', children: <TransactionRawComponent decoded={state.decodedTx} breakDown={true} /> },
+                          { title: 'Replay', children: <TransactionReplayComponent txId={state.transactionIdOrContractAddress!} /> }
+                        ]
+                      }
                     />
                   ) : state.contractBytecode ? (
                     <ScrollableTabs

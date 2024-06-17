@@ -15,7 +15,7 @@ import axios from 'axios'
 import { Grid } from '@mui/material'
 import { Val } from '@alephium/web3/dist/src/api/api-alephium'
 import { codec, hexToBinUnsafe } from '@alephium/web3'
-import { getInstrName } from '../services/utils'
+import { getInstrName, instrToString } from '../services/utils'
 import { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 
@@ -49,11 +49,12 @@ export const TransactionReplayComponent: React.FunctionComponent<TransactionRepl
   })
 
   const executionDescriptionComponent = (instr: codec.Instr) => {
-    const instrName = getInstrName(instr.code)
+    const [instrName, instrValue] = instrToString(instr)
+
     return (
       <div style={{ maxWidth: '480px', textAlign: 'center', marginTop: '20px', wordWrap: 'break-word' }}>
         <span>
-          <span style={{ textDecoration: 'underline' }}></span><span className={`OpCode ${instrName}`}>{instrName} </span>
+          <span style={{ textDecoration: 'underline' }}></span><span className={`OpCode ${instrName}`}>{instrName}{instrValue ? `: ${instrValue}` : null}</span>
         </span>{' '}
       </div>
     )

@@ -1,18 +1,18 @@
 import _ from 'lodash'
 import { codec } from '@alephium/web3'
-import { getInstrName } from '../services/utils'
+import { instrToString } from '../services/utils'
 
 const Instrs = ({ instrs }: { instrs: codec.Instr[] }) => {
   return (
     <div className="ScriptOpCodeList">
       {_(instrs)
         .map((instr, index) => {
-          const instrName = getInstrName(instr.code)
+          const [instrName, instrValue] = instrToString(instr)
           const className = `OpCode ${instrName}`
 
           return (
             <div className={className} key={index}>
-              {getInstrName(instr.code)}
+              {instrName}{instrValue ? `: ${instrValue}` : null}
             </div>
           )
         })

@@ -8,6 +8,38 @@ export function byteToString(input: number): string {
   return binToHex(Uint8Array.from([input]))
 }
 
+export function instrToString(instr: codec.Instr): [string, string | undefined] {
+  const instrName = getInstrName(instr.code)
+  const instrValue = getInstrValue(instr)
+
+  return [instrName!, instrValue]
+}
+
+export function getInstrValue(instr: codec.Instr): string | undefined {
+  const instrsWithIndex = [0x00, 0x01, 0x16, 0x17, 0xa0, 0xa1, 0xce]
+  const instrsWithCompactInt = [0x12, 0x13, 0x4a, 0x4b, 0x4c]
+
+  let value: string | undefined = undefined
+  if (instr.code === 0x14) {
+    value = binToHex(codec.byteStringCodec.encode((instr.value as codec.ByteStringConst).value))
+  } else if (instr.code === 0x15) {
+    value = binToHex(codec.lockupScript.lockupScriptCodec.encode((instr.value as codec.AddressConst).value))
+  } else if (instr.code === 0x7e) {
+    value = binToHex(new codec.ArrayCodec(codec.byteStringCodec).encode((instr.value as codec.Debug).stringParts.value))
+  } else if (instrsWithCompactInt.includes(instr.code)) {
+    value = binToHex(codec.compactUnsignedIntCodec.encode((instr.value as codec.InstrValueWithCompactInt).value))
+  } else if (instrsWithIndex.includes(instr.code)) {
+    value = binToHex(Uint8Array.from([(instr.value as codec.InstrValueWithIndex).index]))
+  } else if (instr.code === 0xd2) {
+    const instrValue = instr.value as codec.CreateMapEntryValue
+    value = binToHex(Uint8Array.from([instrValue.immFields, instrValue.mutFields]))
+  } else if (instr.code === 0xd3 || instr.code === 0xd4) {
+    value = binToHex(codec.signedIntCodec.encode((instr.value as codec.InstrValueWithIndex).index))
+  }
+
+  return value
+}
+
 export function getInstrName(code: number): string | undefined {
   const instrsToName: { [code: string]: string } = {
     '0x00': 'CallLocal',
@@ -198,7 +230,12 @@ export function getInstrName(code: number): string | undefined {
     '0xcc': 'SubContractIdOf',
     '0xcd': 'AlphTokenId',
     '0xce': 'LoadImmField',
-    '0xcf': 'LoadImmFieldByIndex'
+    '0xcf': 'LoadImmFieldByIndex',
+    '0xd0': 'PayGasFee',
+    '0xd1': 'MinimalContractDeposit',
+    '0xd2': 'CreateMapEntry',
+    '0xd3': 'MethodSelector',
+    '0xd4': 'CallExternalBySelector'
   }
 
   const instrKey = byteToString(code)

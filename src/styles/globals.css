@@ -15,6 +15,12 @@ body {
   padding: 16px;
 }
 
+a.prevnext {
+  color: rgb(219, 56, 111);
+  text-decoration: none;
+  border-bottom: rgb(219, 56, 111) dashed 1px;
+}
+
 a.image {
   border: none;
 }
@@ -65,6 +71,11 @@ a.image {
   display: flex;
   align-items: flex-end;
   flex-direction: column;
+}
+
+.pull-center {
+  display: flex;
+  justify-content: center;
 }
 
 .bold {
@@ -130,6 +141,29 @@ a.image {
   overflow: hidden;
   box-shadow: 0 1px 5px 0 black;
   max-width: 100%;
+}
+
+.Bool {
+  color: white;
+  background: #0b97c4;
+}
+
+.Address {
+  background: #23c426;
+}
+
+.U256 {
+  color: white;
+  background: #c45f1e;
+}
+
+.I256 {
+  background: #c42db3;
+}
+
+.ByteVec {
+  color: white;
+  background: black;
 }
 
 .CryptoOps {

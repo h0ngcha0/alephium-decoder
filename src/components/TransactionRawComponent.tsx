@@ -66,14 +66,6 @@ export const TransactionRawComponent: React.FunctionComponent<TransactionRawComp
         </Tooltip>
       </Typography>
       <br />
-
-      {
-        decoded.unsigned.statefulScript.option !== 0 ? (
-          <div className={"pull-center"}>
-            <Button variant="contained" color="success" size="small" endIcon={<Replay />}> Replay Script</Button>
-          </div>
-        ) : null
-      }
     </div >
   ) : (
     <div style={{ maxWidth: '480px', textAlign: 'left', marginTop: '20px', wordWrap: 'break-word' }}>

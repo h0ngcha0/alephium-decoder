@@ -15,7 +15,7 @@ import axios from 'axios'
 import { Grid } from '@mui/material'
 import { Val } from '@alephium/web3/dist/src/api/api-alephium'
 import { codec, hexToBinUnsafe } from '@alephium/web3'
-import { getInstrName, instrToString } from '../services/utils'
+import { instrToString } from '../services/utils'
 import { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 
@@ -254,11 +254,7 @@ function toFrameSnapshots(response: any) {
 }
 
 async function executeTransaction(id: string): Promise<{ frameSnapshots: FrameSnapshot[] }> {
-  return (await axios.post(`https://alephium-d13e6g.alephium.org/transactions/execute?fromGroup=0&toGroup=0`, { id }, {
-    headers: {
-      "X-API-KEY": "017941ed977eb0bd94708a5bfcff4ca22a5a7980ccd9677f8a44a019a59655cb"
-    }
-  })).data
+  return (await axios.post(`https://alephium-d13e6g.alephium.org/transactions/execute?fromGroup=0&toGroup=0`, { id })).data
 }
 
 

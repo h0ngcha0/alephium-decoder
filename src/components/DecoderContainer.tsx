@@ -28,20 +28,12 @@ interface DecoderContainerState {
 }
 
 async function fetchTransaction(txId: string): Promise<any> {
-  return (await axios.get(`https://alephium-d13e6g.alephium.org/transactions/details/${txId}`, {
-    headers: {
-      "X-API-KEY": "017941ed977eb0bd94708a5bfcff4ca22a5a7980ccd9677f8a44a019a59655cb"
-    }
-  })).data
+  return (await axios.get(`https://alephium-d13e6g.alephium.org/transactions/details/${txId}`)).data
 }
 
 async function fetchContractBytecode(contractAddress: string): Promise<{ bytecode: string }> {
   const group = groupOfAddress(contractAddress)
-  return (await axios.get(`https://alephium-d13e6g.alephium.org/contracts/${contractAddress}/state?group=${group}`, {
-    headers: {
-      "X-API-KEY": "017941ed977eb0bd94708a5bfcff4ca22a5a7980ccd9677f8a44a019a59655cb"
-    }
-  })).data
+  return (await axios.get(`https://alephium-d13e6g.alephium.org/contracts/${contractAddress}/state?group=${group}`)).data
 }
 
 function isContractAddress(transactionOrContract: string): boolean {
@@ -190,7 +182,7 @@ export const DecoderContainer: React.FunctionComponent<DecoderContainerProps> = 
                   ) : state.decodedTx ? (
                     <ScrollableTabs
                       tabs={
-                        state.decodedTx.unsigned.statefulScript.option === 0 ? [
+                        state.decodedTx.unsigned.statefulScript.kind === 'None' ? [
                           { title: 'Raw Tx', children: <TransactionRawComponent decoded={state.decodedTx} breakDown={false} /> },
                           { title: 'Break Down', children: <TransactionRawComponent decoded={state.decodedTx} breakDown={true} /> }
                         ] : [

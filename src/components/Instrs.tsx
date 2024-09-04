@@ -12,7 +12,7 @@ const Instrs = ({ instrs }: { instrs: codec.Instr[] }) => {
 
           return (
             <div className={className} key={index}>
-              {instrName}{instrValue ? `: ${instrValue}` : null}
+              <strong>{instrName}</strong>{instrValue ? <span style={{ opacity: 0.7 }}> {instrValue}</span> : null}
             </div>
           )
         })

@@ -419,118 +419,11 @@ function showP2SHParams(decodedVals: codec.val.Val[]) {
 }
 
 function showAssetOutputs(fixedOutputs: codec.assetOutput.AssetOutput[]) {
-  let lockScriptDescription: React.JSX.Element | undefined = undefined
-
-  function showLockScript(lockScript: codec.lockupScript.LockupScript) {
-    if (lockScript.kind === 'P2PKH') {
-      const result = (
-        <>
-          <Tooltip title={"ScriptType"} arrow>
-            <span className={"ScriptType"}>{binToHex(codec.lockupScript.lockupScriptCodec.encode(lockScript).subarray(0, 1))}</span>
-          </Tooltip>
-          <Tooltip title={"PublicKeyHash"} arrow>
-            <span className={"PublicKeyHash"}>{binToHex(lockScript.value)}</span>
-          </Tooltip>
-        </>
-      )
-
-      lockScriptDescription = (
-        <>
-          This is a <u>P2PKH</u> output, the public key hash is <span className={"PublicKeyHash"}>{binToHex(lockScript.value)}</span>
-        </>
-      )
-      return result
-    } else if (lockScript.kind === 'P2MPKH') {
-      const result = (
-        <>
-          <Tooltip title={"ScriptType"} arrow>
-            <span className={"ScriptType"}>{binToHex(codec.lockupScript.lockupScriptCodec.encode(lockScript).subarray(0, 1))}</span>
-          </Tooltip>
-          <Tooltip title={"MultiSigTotalKeys"} arrow>
-            <span className={"MultiSigTotalKeys"}>{encodeToString(codec.i32Codec, lockScript.value.publicKeyHashes.length)}</span>
-          </Tooltip>
-          {
-            lockScript.value.publicKeyHashes.map((publicKeyHash, index) => {
-              const className = index % 2 === 0 ? "PublicKeyHash" : "PublicKeyHashInverse"
-              return (
-                <>
-                  <Tooltip title={"PublicKeyHash"} arrow>
-                    <span className={`${className}`}>{binToHex(publicKeyHash)}</span>
-                  </Tooltip>
-                </>
-              )
-            })
-          }
-          <Tooltip title={"MultiSigRequiredKeys"} arrow>
-            <span className={"MultiSigRequiredKeys"}>{encodeToString(codec.i32Codec, lockScript.value.m)}</span>
-          </Tooltip>
-        </>
-      )
-
-      lockScriptDescription = (
-        <>
-          This is a <u>P2MPKH</u> output, the <span className={"MultiSigTotalKeys"}>{encodeToString(codec.i32Codec, lockScript.value.publicKeyHashes.length)}</span> public key hashes are:
-          <br />
-          {
-            lockScript.value.publicKeyHashes.map((publicKeyHash, index) => {
-              const className = index % 2 === 0 ? "PublicKeyHash" : "PublicKeyHashInverse"
-              return (
-                <>
-                  <span className={`${className}`}>{binToHex(publicKeyHash)}</span>
-                </>
-              )
-            })
-          }
-          <br />
-          The required number of signatures is <span className={"MultiSigRequiredKeys"}>{encodeToString(codec.i32Codec, lockScript.value.m)}</span>
-        </>
-      )
-      return result
-    } else if (lockScript.kind === 'P2SH') {
-      const result = (
-        <>
-          <Tooltip title={"ScriptType"} arrow>
-            <span className={"ScriptType"}>{binToHex(codec.lockupScript.lockupScriptCodec.encode(lockScript).subarray(0, 1))}</span>
-          </Tooltip>
-          <Tooltip title={"P2SHScriptHash"} arrow>
-            <span className={"P2SHScriptHash"}>{binToHex(lockScript.value)}</span>
-          </Tooltip>
-        </>
-      )
-
-      lockScriptDescription = (
-        <>
-          This is a <u>P2SH</u> output, the script hash is <span className={"P2SHScriptHash"}>{binToHex(lockScript.value)}</span>
-        </>
-      )
-      return result
-    } else if (lockScript.kind === 'P2C') {
-      const result = (
-        <>
-          <Tooltip title={"ScriptType"} arrow>
-            <span className={"ScriptType"}>{binToHex(codec.lockupScript.lockupScriptCodec.encode(lockScript).subarray(0, 1))}</span>
-          </Tooltip>
-          <Tooltip title={"P2CContractId"} arrow>
-            <span className={"P2CContractId"}>{binToHex(lockScript.value)}</span>
-          </Tooltip>
-        </>
-      )
-
-      lockScriptDescription = (
-        <>
-          This is a <u>P2C</u> output, the contract id is <span className={"P2CContractId"}>{binToHex(lockScript.value)}</span>
-        </>
-      )
-      return result
-    } else {
-      return undefined
-    }
-  }
-
   return (
     <>
       {
         fixedOutputs.map((output, index) => {
+          const [lockupScriptElement, lockScriptDescriptionElement] = showLockupScript(output.lockupScript);
           return (
             <>
               <br />
@@ -539,7 +432,7 @@ function showAssetOutputs(fixedOutputs: codec.assetOutput.AssetOutput[]) {
               <Tooltip title={"Amount"} arrow>
                 <span className={"Amount"}>{encodeToString(codec.u256Codec, output.amount)}</span>
               </Tooltip>
-              {showLockScript(output.lockupScript)}
+              {lockupScriptElement}
               <Tooltip title={"LockTime"} arrow>
                 <span className={"LockTime"}>{binToHex(codec.timestampCodec.encode(output.lockTime))}</span>
               </Tooltip>
@@ -550,7 +443,7 @@ function showAssetOutputs(fixedOutputs: codec.assetOutput.AssetOutput[]) {
                 <span className={"AdditionalData"}>{encodeToString(codec.byteStringCodec, output.additionalData)}</span>
               </Tooltip>
               <br />
-              {lockScriptDescription !== undefined && lockScriptDescription}
+              {lockScriptDescriptionElement}
               <br />
             </>
           )
@@ -586,114 +479,6 @@ function showContractInputs(contractOutputRefs: codec.ContractOutputRef[]) {
 
 type Output = codec.Either<codec.assetOutput.AssetOutput, codec.contractOutput.ContractOutput>
 function showGeneratedOutputs(outputs: Output[]) {
-  let lockScriptDescription: React.JSX.Element | undefined = undefined
-
-  function showLockScript(lockScript: codec.lockupScript.LockupScript) {
-    if (lockScript.kind === 'P2PKH') {
-      const result = (
-        <>
-          <Tooltip title={"ScriptType"} arrow>
-            <span className={"ScriptType"}>{binToHex(codec.lockupScript.lockupScriptCodec.encode(lockScript).subarray(0, 1))}</span>
-          </Tooltip>
-          <Tooltip title={"PublicKeyHash"} arrow>
-            <span className={"PublicKeyHash"}>{binToHex(lockScript.value)}</span>
-          </Tooltip>
-        </>
-      )
-
-      lockScriptDescription = (
-        <>
-          This is a <u>P2PKH</u> output, the public key hash is <span className={"PublicKeyHash"}>{binToHex(lockScript.value)}</span>
-        </>
-      )
-      return result
-    } else if (lockScript.kind === 'P2MPKH') {
-      const result = (
-        <>
-          <Tooltip title={"ScriptType"} arrow>
-            <span className={"ScriptType"}>{binToHex(codec.lockupScript.lockupScriptCodec.encode(lockScript).subarray(0, 1))}</span>
-          </Tooltip>
-          <Tooltip title={"MultiSigTotalKeys"} arrow>
-            <span className={"MultiSigTotalKeys"}>{encodeToString(codec.i32Codec, lockScript.value.publicKeyHashes.length)}</span>
-          </Tooltip>
-          {
-            lockScript.value.publicKeyHashes.map((publicKeyHash, index) => {
-              const className = index % 2 === 0 ? "PublicKeyHash" : "PublicKeyHashInverse"
-              return (
-                <>
-                  <Tooltip title={"PublicKeyHash"} arrow>
-                    <span className={`${className}`}>{binToHex(publicKeyHash)}</span>
-                  </Tooltip>
-                </>
-              )
-            })
-          }
-          <Tooltip title={"MultiSigRequiredKeys"} arrow>
-            <span className={"MultiSigRequiredKeys"}>{encodeToString(codec.i32Codec, lockScript.value.m)}</span>
-          </Tooltip>
-        </>
-      )
-
-      lockScriptDescription = (
-        <>
-          This is a <u>P2MPKH</u> output, the <span className={"MultiSigTotalKeys"}>{encodeToString(codec.i32Codec, lockScript.value.publicKeyHashes.length)}</span> public key hashes are:
-          <br />
-          {
-            lockScript.value.publicKeyHashes.map((publicKeyHash, index) => {
-              const className = index % 2 === 0 ? "PublicKeyHash" : "PublicKeyHashInverse"
-              return (
-                <>
-                  <span className={`${className}`}>{binToHex(publicKeyHash)}</span>
-                </>
-              )
-            })
-          }
-          <br />
-          The required number of signatures is <span className={"MultiSigRequiredKeys"}>{encodeToString(codec.i32Codec, lockScript.value.m)}</span>
-        </>
-      )
-      return result
-    } else if (lockScript.kind === 'P2SH') {
-      const result = (
-        <>
-          <Tooltip title={"ScriptType"} arrow>
-            <span className={"ScriptType"}>{binToHex(codec.lockupScript.lockupScriptCodec.encode(lockScript).subarray(0, 1))}</span>
-          </Tooltip>
-          <Tooltip title={"P2SHScriptHash"} arrow>
-            <span className={"P2SHScriptHash"}>{binToHex(lockScript.value)}</span>
-          </Tooltip>
-        </>
-      )
-
-      lockScriptDescription = (
-        <>
-          This is a <u>P2SH</u> output, the script hash is <span className={"P2SHScriptHash"}>{binToHex(lockScript.value)}</span>
-        </>
-      )
-      return result
-    } else if (lockScript.kind === 'P2C') {
-      const result = (
-        <>
-          <Tooltip title={"ScriptType"} arrow>
-            <span className={"ScriptType"}>{binToHex(codec.lockupScript.lockupScriptCodec.encode(lockScript).subarray(0, 1))}</span>
-          </Tooltip>
-          <Tooltip title={"P2CContractId"} arrow>
-            <span className={"P2CContractId"}>{binToHex(lockScript.value)}</span>
-          </Tooltip>
-        </>
-      )
-
-      lockScriptDescription = (
-        <>
-          This is a <u>P2C</u> output, the contract id is <span className={"P2CContractId"}>{binToHex(lockScript.value)}</span>
-        </>
-      )
-      return result
-    } else {
-      return undefined
-    }
-  }
-
   return (
     <>
       {
@@ -709,22 +494,29 @@ function showGeneratedOutputs(outputs: Output[]) {
               {
                 output.kind === 'Left' ? (
                   <>
-                    <Tooltip title={"Amount"} arrow>
-                      <span className={"Amount"}>{encodeToString(codec.u256Codec, output.value.amount)}</span>
-                    </Tooltip>
-                    {showLockScript((output.value as codec.assetOutput.AssetOutput).lockupScript)}
-                    <Tooltip title={"LockTime"} arrow>
-                      <span className={"LockTime"}>{binToHex(codec.timestampCodec.encode(output.value.lockTime))}</span>
-                    </Tooltip>
-                    <Tooltip title={"Tokens"} arrow>
-                      <span className={"Tokens"}>{encodeToString(codec.token.tokensCodec, output.value.tokens)}</span>
-                    </Tooltip>
-                    <Tooltip title={"AdditionalData"} arrow>
-                      <span className={"AdditionalData"}>{encodeToString(codec.byteStringCodec, (output.value as codec.assetOutput.AssetOutput).additionalData)}</span>
-                    </Tooltip>
-                    <br />
-                    {lockScriptDescription !== undefined && lockScriptDescription}
-                    <br />
+                    {(() => {
+                      const [lockupScriptElement, lockScriptDescription] = showLockupScript((output.value as codec.assetOutput.AssetOutput).lockupScript);
+                      return (
+                        <>
+                          <Tooltip title={"Amount"} arrow>
+                            <span className={"Amount"}>{encodeToString(codec.u256Codec, output.value.amount)}</span>
+                          </Tooltip>
+                          {lockupScriptElement}
+                          <Tooltip title={"LockTime"} arrow>
+                            <span className={"LockTime"}>{binToHex(codec.timestampCodec.encode(output.value.lockTime))}</span>
+                          </Tooltip>
+                          <Tooltip title={"Tokens"} arrow>
+                            <span className={"Tokens"}>{encodeToString(codec.token.tokensCodec, output.value.tokens)}</span>
+                          </Tooltip>
+                          <Tooltip title={"AdditionalData"} arrow>
+                            <span className={"AdditionalData"}>{encodeToString(codec.byteStringCodec, (output.value as codec.assetOutput.AssetOutput).additionalData)}</span>
+                          </Tooltip>
+                          <br />
+                          {lockScriptDescription}
+                          <br />
+                        </>
+                      );
+                    })()}
                   </>
                 ) : output.kind === 'Right' ? (
                   <>
@@ -771,6 +563,112 @@ function showSignatures(signatures: codec.Signature[]) {
       }
     </>
   )
+}
+
+function showLockupScript(lockScript: codec.lockupScript.LockupScript): [React.JSX.Element | undefined, React.JSX.Element | undefined] {
+  if (lockScript.kind === 'P2PKH') {
+    const result = (
+      <>
+        <Tooltip title={"ScriptType"} arrow>
+          <span className={"ScriptType"}>{binToHex(codec.lockupScript.lockupScriptCodec.encode(lockScript).subarray(0, 1))}</span>
+        </Tooltip>
+        <Tooltip title={"PublicKeyHash"} arrow>
+          <span className={"PublicKeyHash"}>{binToHex(lockScript.value)}</span>
+        </Tooltip>
+      </>
+    )
+
+    const lockScriptDescription = (
+      <>
+        This is a <u>P2PKH</u> output, the public key hash is <span className={"PublicKeyHash"}>{binToHex(lockScript.value)}</span>
+      </>
+    )
+    return [result, lockScriptDescription]
+  } else if (lockScript.kind === 'P2MPKH') {
+    const result = (
+      <>
+        <Tooltip title={"ScriptType"} arrow>
+          <span className={"ScriptType"}>{binToHex(codec.lockupScript.lockupScriptCodec.encode(lockScript).subarray(0, 1))}</span>
+        </Tooltip>
+        <Tooltip title={"MultiSigTotalKeys"} arrow>
+          <span className={"MultiSigTotalKeys"}>{encodeToString(codec.i32Codec, lockScript.value.publicKeyHashes.length)}</span>
+        </Tooltip>
+        {
+          lockScript.value.publicKeyHashes.map((publicKeyHash, index) => {
+            const className = index % 2 === 0 ? "PublicKeyHash" : "PublicKeyHashInverse"
+            return (
+              <>
+                <Tooltip title={"PublicKeyHash"} arrow>
+                  <span className={`${className}`}>{binToHex(publicKeyHash)}</span>
+                </Tooltip>
+              </>
+            )
+          })
+        }
+        <Tooltip title={"MultiSigRequiredKeys"} arrow>
+          <span className={"MultiSigRequiredKeys"}>{encodeToString(codec.i32Codec, lockScript.value.m)}</span>
+        </Tooltip>
+      </>
+    )
+
+    const lockScriptDescription = (
+      <>
+        This is a <u>P2MPKH</u> output, the <span className={"MultiSigTotalKeys"}>{encodeToString(codec.i32Codec, lockScript.value.publicKeyHashes.length)}</span> public key hashes are:
+        <br />
+        {
+          lockScript.value.publicKeyHashes.map((publicKeyHash, index) => {
+            const className = index % 2 === 0 ? "PublicKeyHash" : "PublicKeyHashInverse"
+            return (
+              <>
+                <span className={`${className}`}>{binToHex(publicKeyHash)}</span>
+              </>
+            )
+          })
+        }
+        <br />
+        The required number of signatures is <span className={"MultiSigRequiredKeys"}>{encodeToString(codec.i32Codec, lockScript.value.m)}</span>
+      </>
+    )
+    return [result, lockScriptDescription]
+  } else if (lockScript.kind === 'P2SH') {
+    const result = (
+      <>
+        <Tooltip title={"ScriptType"} arrow>
+          <span className={"ScriptType"}>{binToHex(codec.lockupScript.lockupScriptCodec.encode(lockScript).subarray(0, 1))}</span>
+        </Tooltip>
+        <Tooltip title={"P2SHScriptHash"} arrow>
+          <span className={"P2SHScriptHash"}>{binToHex(lockScript.value)}</span>
+        </Tooltip>
+      </>
+    )
+
+    const lockScriptDescription = (
+      <>
+        This is a <u>P2SH</u> output, the script hash is <span className={"P2SHScriptHash"}>{binToHex(lockScript.value)}</span>
+      </>
+    )
+    return [result, lockScriptDescription]
+  } else if (lockScript.kind === 'P2C') {
+    const result = (
+      <>
+        <Tooltip title={"ScriptType"} arrow>
+          <span className={"ScriptType"}>{binToHex(codec.lockupScript.lockupScriptCodec.encode(lockScript).subarray(0, 1))}</span>
+        </Tooltip>
+        <Tooltip title={"P2CContractId"} arrow>
+          <span className={"P2CContractId"}>{binToHex(lockScript.value)}</span>
+        </Tooltip>
+      </>
+    )
+
+    const lockScriptDescription = (
+      <>
+        This is a <u>P2C</u> output, the contract id is <span className={"P2CContractId"}>{binToHex(lockScript.value)}</span>
+      </>
+    )
+    return [result, lockScriptDescription]
+  } else {
+    return [undefined, undefined]
+  }
 }
 
 export default TransactionRawComponent

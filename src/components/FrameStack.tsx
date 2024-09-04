@@ -6,11 +6,11 @@ const FrameStack = ({ frameStack }: { frameStack: (string | null)[] }) => {
     <div className="ScriptOpCodeList">
       {_(frameStack)
         .map((frame, index) => {
-          const className = `OpCode`
+          const className = frame === null ? "TxScriptFrame" : "ContractFrame"
 
           return (
             <div className={className} key={index}>
-              {frame === null ? "TxScript" : `Contract: ${addressFromContractId(frame)}`}
+              {frame === null ? <strong>TxScript</strong> : <><strong>Contract</strong> <span style={{ opacity: 0.7 }}>{addressFromContractId(frame)}</span></>}
             </div>
           )
         })

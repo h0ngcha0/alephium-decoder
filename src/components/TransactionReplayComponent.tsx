@@ -52,10 +52,12 @@ export const TransactionReplayComponent: React.FunctionComponent<TransactionRepl
     const [instrName, instrValue] = instrToString(instr)
 
     return (
-      <div style={{ maxWidth: '480px', textAlign: 'center', marginTop: '20px', wordWrap: 'break-word' }}>
+      <div style={{ maxWidth: '600px', marginTop: '30px', wordWrap: 'break-word' }}>
         <span>
-          <span style={{ textDecoration: 'underline' }}></span><span className={`OpCode ${instrName}`}>{instrName}{instrValue ? `: ${instrValue}` : null}</span>
-        </span>{' '}
+          <span className={`OpCode ${instrName}`} style={{ fontSize: '1.3em', fontWeight: 'bold', padding: '4px 8px', borderRadius: '4px', boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.5)', transition: 'box-shadow 0.3s ease-in-out' }}>
+            <strong style={{ fontWeight: 'bolder' }}>{instrName}</strong>{instrValue ? <span style={{ opacity: 0.7 }}> {instrValue}</span> : null}
+          </span>
+        </span>
       </div>
     )
   }
@@ -172,7 +174,6 @@ export const TransactionReplayComponent: React.FunctionComponent<TransactionRepl
         </TableBody>
       </Table>
 
-      {executionDescriptionComponent(state.frameSnapshots[state.step].currentInstr)}
 
       <Table padding="none">
         <TableHead>
@@ -185,6 +186,7 @@ export const TransactionReplayComponent: React.FunctionComponent<TransactionRepl
           </TableRow>
         </TableHead>
         <TableBody>
+          {executionDescriptionComponent(state.frameSnapshots[state.step].currentInstr)}
           <TableRow>
             <TableCell style={{ whiteSpace: 'normal', wordWrap: 'break-word', maxWidth: '120px', height: '48px' }}>
               <div style={{ marginTop: '5px' }}>

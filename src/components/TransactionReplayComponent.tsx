@@ -167,7 +167,7 @@ export const TransactionReplayComponent: React.FunctionComponent<TransactionRepl
           <TableRow>
             <TableCell style={{ whiteSpace: 'normal', wordWrap: 'break-word', maxWidth: '120px', height: '48px' }}>
 
-              <FrameStack frameStack={state.frameSnapshots[state.step].frameStack.slice().reverse()} />
+              <FrameStack frameStack={state.frameSnapshots[state.step].frameStack.slice().reverse()} vals={state.frameSnapshots[state.step].locals} />
 
             </TableCell>
           </TableRow>
@@ -212,27 +212,6 @@ export const TransactionReplayComponent: React.FunctionComponent<TransactionRepl
             <TableCell style={{ whiteSpace: 'normal', wordWrap: 'break-word', maxWidth: '120px', height: '48px' }}>
               <div style={{ marginTop: '5px' }}>
                 <OpStack vals={state.frameSnapshots[state.step].opStack.slice().reverse()} />
-              </div>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-
-      <Table padding="none">
-        <TableHead>
-          <TableRow>
-            <TableCell style={{ height: '48px' }}>
-              <Typography color="textSecondary" variant="caption">
-                Locals
-              </Typography>
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          <TableRow>
-            <TableCell style={{ whiteSpace: 'normal', wordWrap: 'break-word', maxWidth: '120px', height: '48px' }}>
-              <div style={{ marginTop: '5px' }}>
-                <Locals vals={state.frameSnapshots[state.step].locals} />
               </div>
             </TableCell>
           </TableRow>

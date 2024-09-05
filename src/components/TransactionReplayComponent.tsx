@@ -29,7 +29,7 @@ interface FrameSnapshot {
   contractId?: string,
   locals: Val[],
   opStack: Val[],
-  frameStack: (string | null)[]
+  frameStack: [(string | null), number][]
 }
 
 interface TransactionReplayState {

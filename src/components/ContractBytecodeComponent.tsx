@@ -23,7 +23,7 @@ export const ContractBytecodeComponent: React.FunctionComponent<ContractBytecode
   const rawMethods = getRawMethods(decodedContract)
 
   return breakDown === false ? (
-    <div style={{ maxWidth: '480px', textAlign: 'left', marginTop: '20px', wordWrap: 'break-word' }}>
+    <div style={{ maxWidth: '600px', textAlign: 'left', marginTop: '20px', wordWrap: 'break-word' }}>
       <Typography variant="body2">
         <Tooltip title="FieldLength" arrow>
           <span className="TxVersion">{encodeToString(i32Codec, decodedContract.fieldLength)}</span>
@@ -38,7 +38,7 @@ export const ContractBytecodeComponent: React.FunctionComponent<ContractBytecode
       <br />
     </div>
   ) : (
-    <div style={{ maxWidth: '480px', textAlign: 'left', marginTop: '20px', wordWrap: 'break-word' }}>
+    <div style={{ maxWidth: '600px', textAlign: 'left', marginTop: '20px', wordWrap: 'break-word' }}>
       <Typography variant="body2">
         <b>Field Length</b>
         <br />
@@ -206,9 +206,7 @@ function showInstrs(instrs: codec.Instr[]) {
     <>
       {
         instrs.map((instr) => {
-          console.log("instr.code", instr.code)
           const instrName = instr.name
-          console.log("instrName", instrName)
           return (
             <>
               <Tooltip title={`${instrName}`} arrow>

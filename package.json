@@ -1,6 +1,6 @@
 {
   "name": "alph-decoder",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "license": "GPL",
   "scripts": {
     "dev": "next dev",

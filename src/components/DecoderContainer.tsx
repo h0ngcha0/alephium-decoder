@@ -173,7 +173,7 @@ export const DecoderContainer: React.FunctionComponent<DecoderContainerProps> = 
                   )
                 }
               </span>
-              <div style={{ maxWidth: '480px', textAlign: 'center', margin: 'auto', marginTop: '16px' }}>
+              <div style={{ maxWidth: '600px', textAlign: 'center', margin: 'auto', marginTop: '16px' }}>
                 {
                   state.error !== undefined ? (
                     <div style={{ marginTop: '32px', textAlign: 'center' }}>

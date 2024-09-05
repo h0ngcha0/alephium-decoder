@@ -54,7 +54,7 @@ export const TransactionReplayComponent: React.FunctionComponent<TransactionRepl
     const [instrName, instrValue] = instrToString(instr)
 
     return (
-      <div style={{ maxWidth: '600px', marginTop: '30px', wordWrap: 'break-word' }}>
+      <div style={{ maxWidth: '600px', wordWrap: 'break-word' }}>
         <span>
           <span className={`OpCode ${instrName}`} style={{
             fontSize: '1em',
@@ -138,7 +138,7 @@ export const TransactionReplayComponent: React.FunctionComponent<TransactionRepl
       const nextStepIconStyle = state.step >= maxStep ? disabledIconStyle : activeIconStyle
 
       return (
-        <div style={{ maxWidth: '550px', textAlign: 'center', margin: '0 auto', marginTop: '30px' }}>
+        <div style={{ maxWidth: '600px', textAlign: 'center', margin: '0 auto', marginTop: '30px' }}>
           <Grid container>
             <Grid item sm={4} xs={4}>
               <div>
@@ -171,56 +171,63 @@ export const TransactionReplayComponent: React.FunctionComponent<TransactionRepl
 
   const currentSnapshot = state.frameSnapshots[state.step]
   return (
-    <div style={{ maxWidth: '480px', textAlign: 'left', marginTop: '20px', wordWrap: 'break-word' }}>
-      {prevNextButtons()}
-
-      <Table padding="none">
-        <TableHead>
-          <TableRow>
-            <TableCell style={{ height: '48px' }}>
-              <Typography color="textSecondary" variant="caption">
-                VM Instructions
-              </Typography>
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {executionDescriptionComponent(state.frameSnapshots[state.step].currentInstr)}
-          <TableRow>
-            <TableCell style={{ whiteSpace: 'normal', wordWrap: 'break-word', maxWidth: '120px', height: '48px' }}>
-              <div style={{ marginTop: '5px' }}>
-                <Instrs instrs={state.frameSnapshots[state.step].remainingInstrs} />
-              </div>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-
-      <Table padding="none">
-        <TableHead>
-          <TableRow>
-            <TableCell style={{ height: '48px' }}>
-              <Typography color="textSecondary" variant="caption">
-                Frame Stack
-              </Typography>
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          <TableRow>
-            <TableCell style={{ whiteSpace: 'normal', wordWrap: 'break-word', maxWidth: '120px', height: '48px' }}>
-              <FrameStack
-                frameStack={currentSnapshot.frameStack.slice().reverse()}
-                locals={currentSnapshot.locals}
-                immFields={currentSnapshot.immFields}
-                mutFields={currentSnapshot.mutFields}
-                opStack={currentSnapshot.opStack.slice().reverse()}
-              />
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-
+    <div style={{ maxWidth: '600px', textAlign: 'left', marginTop: '20px', wordWrap: 'break-word' }}>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+        {prevNextButtons()}
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <Table padding="none">
+            <TableHead>
+              <TableRow>
+                <TableCell style={{ height: '48px' }}>
+                  <Typography color="textSecondary" variant="caption">
+                    <div style={{ textAlign: 'center' }}>Frame VM Instrs</div>
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              { executionDescriptionComponent(currentSnapshot.currentInstr) }
+              <TableRow>
+                <TableCell style={{ whiteSpace: 'normal', wordWrap: 'break-word', maxWidth: '120px', height: '48px' }}>
+                  <div style={{ marginTop: '5px' }}>
+                    <Instrs instrs={currentSnapshot.remainingInstrs} />
+                  </div>
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <Table padding="none">
+            <TableHead>
+              <TableRow>
+                <TableCell style={{ height: '48px' }}>
+                  <Typography color="textSecondary" variant="caption">
+                    <div style={{ textAlign: 'center' }}>Frame Stack</div>
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow>
+                <TableCell style={{ whiteSpace: 'normal', wordWrap: 'break-word', maxWidth: '120px', height: '48px' }}>
+                  {currentSnapshot && (
+                    <FrameStack
+                      frameStack={currentSnapshot.frameStack.slice().reverse()}
+                      locals={currentSnapshot.locals}
+                      immFields={currentSnapshot.immFields}
+                      mutFields={currentSnapshot.mutFields}
+                      opStack={currentSnapshot.opStack.slice().reverse()}
+                    />
+                  )}
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </Grid>
+      </Grid>
     </div>
   )
 }

@@ -19,7 +19,7 @@ export const TransactionRawComponent: React.FunctionComponent<TransactionRawComp
   const signaturesCodec = new ArrayCodec(signatureCodec)
 
   return breakDown === false ? (
-    <div style={{ maxWidth: '480px', textAlign: 'left', marginTop: '20px', wordWrap: 'break-word' }}>
+    <div style={{ maxWidth: '600px', textAlign: 'left', marginTop: '20px', wordWrap: 'break-word' }}>
       <Typography variant="body2">
         <Tooltip title="Version" arrow>
           <span className="TxVersion">{byteToString(decoded.unsigned.version)}</span>
@@ -64,7 +64,7 @@ export const TransactionRawComponent: React.FunctionComponent<TransactionRawComp
       <br />
     </div >
   ) : (
-    <div style={{ maxWidth: '480px', textAlign: 'left', marginTop: '20px', wordWrap: 'break-word' }}>
+    <div style={{ maxWidth: '600px', textAlign: 'left', marginTop: '20px', wordWrap: 'break-word' }}>
       <Typography variant="body2">
         <b>Version Number</b>
         <br />

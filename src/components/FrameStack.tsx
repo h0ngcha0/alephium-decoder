@@ -32,19 +32,17 @@ const FrameStack = ({ frameStack, locals, immFields, mutFields, opStack }: { fra
                       }}
                       title="Method Index"
                     >
-                    {methodIndex}
+                      {methodIndex}
                     </span>
                   </>
               }
 
               {index === 0 && (
                 <>
-                  {opStack.length > 0 && (
-                    <div style={{ backgroundColor: '#f5f5f5', padding: '10px', borderRadius: '5px', marginTop: '10px' }}>
-                      <h4 style={{ marginTop: '0', marginBottom: '10px', color: '#3f51b5' }}>Op Stack</h4>
-                      <OpStack vals={opStack} />
-                    </div>
-                  )}
+                  <div style={{ backgroundColor: '#f5f5f5', padding: '10px', borderRadius: '5px', marginTop: '10px' }}>
+                    <h4 style={{ marginTop: '0', marginBottom: '10px', color: '#3f51b5' }}>Op Stack</h4>
+                    <OpStack vals={opStack} />
+                  </div>
                   {immFields.length > 0 && (
                     <div style={{ backgroundColor: '#f5f5f5', padding: '10px', borderRadius: '5px', marginTop: '10px' }}>
                       <h4 style={{ marginTop: '0', marginBottom: '10px', color: '#3f51b5' }}>Immutable Fields</h4>

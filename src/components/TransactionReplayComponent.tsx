@@ -27,6 +27,8 @@ interface FrameSnapshot {
   currentInstr: codec.Instr
   remainingInstrs: codec.Instr[],
   contractId?: string,
+  immFields: Val[],
+  mutFields: Val[],
   locals: Val[],
   opStack: Val[],
   frameStack: [(string | null), number][]
@@ -54,10 +56,28 @@ export const TransactionReplayComponent: React.FunctionComponent<TransactionRepl
     return (
       <div style={{ maxWidth: '600px', marginTop: '30px', wordWrap: 'break-word' }}>
         <span>
-          <span className={`OpCode ${instrName}`} style={{ fontSize: '1.3em', fontWeight: 'bold', padding: '4px 8px', borderRadius: '4px', boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.5)', transition: 'box-shadow 0.3s ease-in-out' }}>
-            <strong style={{ fontWeight: 'bolder' }}>{instrName}</strong>{instrValue ? <span style={{ opacity: 0.7 }}> {instrValue}</span> : null}
+          <span className={`OpCode ${instrName}`} style={{
+            fontSize: '1em',
+            transition: 'all 0.3s ease-in-out',
+            animation: 'pulse 1s infinite'
+          }}>
+            <strong style={{ fontWeight: 'bolder' }}>{instrName}</strong>
+            {instrValue ? <span style={{ opacity: 0.7 }}> {instrValue}</span> : null}
           </span>
         </span>
+        <style jsx>{`
+          @keyframes pulse {
+            0% {
+              transform: scale(1);
+            }
+            50% {
+              transform: scale(1.05);
+            }
+            100% {
+              transform: scale(1);
+            }
+          }
+        `}</style>
       </div>
     )
   }
@@ -149,6 +169,7 @@ export const TransactionReplayComponent: React.FunctionComponent<TransactionRepl
     }
   }
 
+  const currentSnapshot = state.frameSnapshots[state.step]
   return (
     <div style={{ maxWidth: '480px', textAlign: 'left', marginTop: '20px', wordWrap: 'break-word' }}>
       {prevNextButtons()}
@@ -158,29 +179,7 @@ export const TransactionReplayComponent: React.FunctionComponent<TransactionRepl
           <TableRow>
             <TableCell style={{ height: '48px' }}>
               <Typography color="textSecondary" variant="caption">
-                Frame Stack
-              </Typography>
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          <TableRow>
-            <TableCell style={{ whiteSpace: 'normal', wordWrap: 'break-word', maxWidth: '120px', height: '48px' }}>
-
-              <FrameStack frameStack={state.frameSnapshots[state.step].frameStack.slice().reverse()} vals={state.frameSnapshots[state.step].locals} />
-
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-
-
-      <Table padding="none">
-        <TableHead>
-          <TableRow>
-            <TableCell style={{ height: '48px' }}>
-              <Typography color="textSecondary" variant="caption">
-                Instrs
+                VM Instructions
               </Typography>
             </TableCell>
           </TableRow>
@@ -202,7 +201,7 @@ export const TransactionReplayComponent: React.FunctionComponent<TransactionRepl
           <TableRow>
             <TableCell style={{ height: '48px' }}>
               <Typography color="textSecondary" variant="caption">
-                Op Stack
+                Frame Stack
               </Typography>
             </TableCell>
           </TableRow>
@@ -210,13 +209,18 @@ export const TransactionReplayComponent: React.FunctionComponent<TransactionRepl
         <TableBody>
           <TableRow>
             <TableCell style={{ whiteSpace: 'normal', wordWrap: 'break-word', maxWidth: '120px', height: '48px' }}>
-              <div style={{ marginTop: '5px' }}>
-                <OpStack vals={state.frameSnapshots[state.step].opStack.slice().reverse()} />
-              </div>
+              <FrameStack
+                frameStack={currentSnapshot.frameStack.slice().reverse()}
+                locals={currentSnapshot.locals}
+                immFields={currentSnapshot.immFields}
+                mutFields={currentSnapshot.mutFields}
+                opStack={currentSnapshot.opStack.slice().reverse()}
+              />
             </TableCell>
           </TableRow>
         </TableBody>
       </Table>
+
     </div>
   )
 }
@@ -227,6 +231,8 @@ function toFrameSnapshots(response: any) {
       currentInstr: codec.instrCodec.decode(hexToBinUnsafe(snapshot.currentInstr)),
       remainingInstrs: snapshot.remainingInstrs.map((instr: any) => codec.instrCodec.decode(hexToBinUnsafe(instr))),
       contractId: snapshot.contractId,
+      immFields: snapshot.immFields,
+      mutFields: snapshot.mutFields,
       locals: snapshot.locals,
       opStack: snapshot.opStack,
       frameStack: snapshot.frameStack
@@ -237,8 +243,6 @@ function toFrameSnapshots(response: any) {
 async function executeTransaction(id: string): Promise<{ frameSnapshots: FrameSnapshot[] }> {
   return (await axios.post(`https://alephium-d13e6g.alephium.org/transactions/execute?fromGroup=0&toGroup=0`, { id })).data
 }
-
-
 
 TransactionReplayComponent.propTypes = {
   txId: PropTypes.string.isRequired

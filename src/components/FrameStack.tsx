@@ -2,8 +2,9 @@ import { addressFromContractId } from '@alephium/web3'
 import { Val } from '@alephium/web3/dist/src/api/api-alephium'
 import _, { method } from 'lodash'
 import Locals from './Locals'
+import OpStack from './OpStack'
 
-const FrameStack = ({ frameStack, vals }: { frameStack: [(string | null), number][], vals: Val[] }) => {
+const FrameStack = ({ frameStack, locals, immFields, mutFields, opStack }: { frameStack: [(string | null), number][], locals: Val[], immFields: Val[], mutFields: Val[], opStack: Val[] }) => {
   return (
     <div className="ScriptOpCodeList">
       {_(frameStack)
@@ -12,9 +13,6 @@ const FrameStack = ({ frameStack, vals }: { frameStack: [(string | null), number
           const methodIndex = frameStackElem[1]
           const className = frame === null ? "TxScriptFrame" : "ContractFrame"
 
-          console.log("frameStackElem", frameStackElem)
-          console.log("frame", frame)
-          console.log("methodIndex", methodIndex)
           return (
             <div className={className} key={index}>
               {
@@ -39,11 +37,33 @@ const FrameStack = ({ frameStack, vals }: { frameStack: [(string | null), number
                   </>
               }
 
-              {index === 0 && vals.length > 0 && (
-                <div style={{ backgroundColor: '#f5f5f5', padding: '10px', borderRadius: '5px', marginTop: '10px' }}>
-                  <h4 style={{ marginTop: '0', marginBottom: '10px', color: '#3f51b5' }}>Local Variables</h4>
-                  <Locals vals={vals} />
-                </div>
+              {index === 0 && (
+                <>
+                  {opStack.length > 0 && (
+                    <div style={{ backgroundColor: '#f5f5f5', padding: '10px', borderRadius: '5px', marginTop: '10px' }}>
+                      <h4 style={{ marginTop: '0', marginBottom: '10px', color: '#3f51b5' }}>Op Stack</h4>
+                      <OpStack vals={opStack} />
+                    </div>
+                  )}
+                  {immFields.length > 0 && (
+                    <div style={{ backgroundColor: '#f5f5f5', padding: '10px', borderRadius: '5px', marginTop: '10px' }}>
+                      <h4 style={{ marginTop: '0', marginBottom: '10px', color: '#3f51b5' }}>Immutable Fields</h4>
+                      <Locals vals={immFields} />
+                    </div>
+                  )}
+                  {mutFields.length > 0 && (
+                    <div style={{ backgroundColor: '#f5f5f5', padding: '10px', borderRadius: '5px', marginTop: '10px' }}>
+                      <h4 style={{ marginTop: '0', marginBottom: '10px', color: '#3f51b5' }}>Mutable Fields</h4>
+                      <Locals vals={mutFields} />
+                    </div>
+                  )}
+                  {locals.length > 0 && (
+                    <div style={{ backgroundColor: '#f5f5f5', padding: '10px', borderRadius: '5px', marginTop: '10px' }}>
+                      <h4 style={{ marginTop: '0', marginBottom: '10px', color: '#3f51b5' }}>Local Variables</h4>
+                      <Locals vals={locals} />
+                    </div>
+                  )}
+                </>
               )}
             </div>
           )

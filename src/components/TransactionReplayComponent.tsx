@@ -65,7 +65,7 @@ export const TransactionReplayComponent: React.FunctionComponent<TransactionRepl
             {instrValue ? <span style={{ opacity: 0.7 }}> {instrValue}</span> : null}
           </span>
         </span>
-        <style jsx>{`
+        <style>{`
           @keyframes pulse {
             0% {
               transform: scale(1);

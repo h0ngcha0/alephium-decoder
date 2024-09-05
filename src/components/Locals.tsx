@@ -10,7 +10,7 @@ const Locals = ({ vals }: { vals: Val[] }) => {
 
           return (
             <div className={className} key={index}>
-              {val.type}: {`${val.value}`}
+              <strong>{val.type}</strong><span style={{ opacity: 0.7 }}> {`${val.value}`}</span>
             </div>
           )
         })

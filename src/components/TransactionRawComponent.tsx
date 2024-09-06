@@ -109,14 +109,14 @@ export const TransactionRawComponent: React.FunctionComponent<TransactionRawComp
         <Tooltip title="GasAmount" arrow>
           <span className="GasAmount">{encodeToString(u256Codec, BigInt(decoded.unsigned.gasAmount))}</span>
         </Tooltip>
-        <div> Encoded gas amount, which is <u>{i32Codec.encode(decoded.unsigned.gasAmount)}</u> in decimal</div>
+        <div> Encoded gas amount, which is <u>{decoded.unsigned.gasAmount}</u> in decimal</div>
         <br />
         <b>Gas Price</b>
         <br />
         <Tooltip title="GasPrice" arrow>
           <span className="GasPrice">{encodeToString(u256Codec, decoded.unsigned.gasPrice)}</span>
         </Tooltip>
-        <div> Encoded gas price, which is <u>{u256Codec.encode(decoded.unsigned.gasPrice).toString()}</u> in decimal</div>
+        <div> Encoded gas price, which is <u>{decoded.unsigned.gasPrice.toString()}</u> in decimal</div>
         <br />
         <b>Inputs</b>
         <br />

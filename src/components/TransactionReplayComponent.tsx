@@ -12,7 +12,7 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
 import axios from 'axios'
-import { Grid } from '@mui/material'
+import { Grid, LinearProgress } from '@mui/material'
 import { Val } from '@alephium/web3/dist/src/api/api-alephium'
 import { codec, hexToBinUnsafe } from '@alephium/web3'
 import { instrToString } from '../services/utils'
@@ -31,6 +31,7 @@ interface FrameSnapshot {
   mutFields: Val[],
   locals: Val[],
   opStack: Val[],
+  gasRemaining: number,
   frameStack: [(string | null), number][]
 }
 
@@ -174,7 +175,17 @@ export const TransactionReplayComponent: React.FunctionComponent<TransactionRepl
     <div style={{ maxWidth: '600px', textAlign: 'left', marginTop: '20px', wordWrap: 'break-word' }}>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-        {prevNextButtons()}
+          {prevNextButtons()}
+        </Grid>
+        <Grid item xs={12}>
+          <LinearProgress
+            variant="determinate"
+            value={(currentSnapshot.gasRemaining / state.frameSnapshots[0].gasRemaining) * 100}
+            style={{ height: '8px', borderRadius: '4px' }}
+          />
+          <Typography variant="caption" color="textSecondary" align="center" style={{ display: 'block', marginTop: '4px' }}>
+            Gas Remaining: {currentSnapshot.gasRemaining}
+          </Typography>
         </Grid>
         <Grid item xs={12} sm={6}>
           <Table padding="none">
@@ -242,6 +253,7 @@ function toFrameSnapshots(response: any) {
       mutFields: snapshot.mutFields,
       locals: snapshot.locals,
       opStack: snapshot.opStack,
+      gasRemaining: snapshot.gasRemaining,
       frameStack: snapshot.frameStack
     }
   })

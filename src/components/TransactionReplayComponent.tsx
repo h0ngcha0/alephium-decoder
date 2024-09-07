@@ -1,10 +1,8 @@
 import FrameStack from './FrameStack'
 import Instrs from './Instrs'
 import Loading from './Loading'
-import Locals from './Locals'
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
-import OpStack from './OpStack'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -23,6 +21,7 @@ interface TransactionReplayComponentProps {
   txId: string
 }
 
+type AddressBalance = [string, {attoAlphAmount: bigint, tokenAmounts: [string, bigint][]}]
 interface FrameSnapshot {
   currentInstr: codec.Instr
   remainingInstrs: codec.Instr[],
@@ -32,6 +31,10 @@ interface FrameSnapshot {
   locals: Val[],
   opStack: Val[],
   gasRemaining: number,
+  balanceState?: {
+    available: AddressBalance[],
+    approved: AddressBalance[],
+  }
   frameStack: [(string | null), number][]
 }
 
@@ -231,6 +234,7 @@ export const TransactionReplayComponent: React.FunctionComponent<TransactionRepl
                       immFields={currentSnapshot.immFields}
                       mutFields={currentSnapshot.mutFields}
                       opStack={currentSnapshot.opStack.slice().reverse()}
+                      balanceState={currentSnapshot.balanceState}
                     />
                   )}
                 </TableCell>
@@ -254,6 +258,7 @@ function toFrameSnapshots(response: any) {
       locals: snapshot.locals,
       opStack: snapshot.opStack,
       gasRemaining: snapshot.gasRemaining,
+      balanceState: snapshot.balanceState,
       frameStack: snapshot.frameStack
     }
   })

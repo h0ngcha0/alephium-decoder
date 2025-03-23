@@ -14,6 +14,7 @@ import axios from 'axios'
 import { Link } from '@mui/material'
 import { binToHex, contractIdFromAddress, groupOfAddress, hexToBinUnsafe } from '@alephium/web3'
 import { codec } from '@alephium/web3'
+import { AnimatedIntro } from './AnimatedIntro'
 
 interface DecoderContainerProps {
   transactionIdOrContractAddress?: string
@@ -52,6 +53,7 @@ export const DecoderContainer: React.FunctionComponent<DecoderContainerProps> = 
     loading: false,
     error: undefined,
   })
+  const [showIntro, setShowIntro] = useState(true);
 
   const loadTransactionOrContract = useCallback((transactionIdOrContractAddress: string) => {
     const contractAddress = isContractAddress(transactionIdOrContractAddress) ?
@@ -134,7 +136,10 @@ export const DecoderContainer: React.FunctionComponent<DecoderContainerProps> = 
               sx={{ ml: 1, flex: 1 }}
               placeholder="Search Tx Id or Contract Address"
               inputProps={{ 'aria-label': 'search transaction or contract' }}
-              onChange={(newValue) => handleSetTransactionIdOrContractAddress(newValue.target.value)}
+              onChange={(newValue) => {
+                handleSetTransactionIdOrContractAddress(newValue.target.value);
+                setShowIntro(false);
+              }}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && state.transactionIdOrContractAddress) {
                   loadTransactionOrContract(state.transactionIdOrContractAddress)
@@ -146,6 +151,7 @@ export const DecoderContainer: React.FunctionComponent<DecoderContainerProps> = 
               <SearchIcon />
             </IconButton>
           </Paper>
+          <AnimatedIntro isVisible={showIntro} />
           {state.loading ? (
             <Loading />
           ) : (

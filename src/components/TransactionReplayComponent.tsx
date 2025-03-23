@@ -265,7 +265,7 @@ function toFrameSnapshots(response: any) {
 }
 
 async function executeTransaction(id: string): Promise<{ frameSnapshots: FrameSnapshot[] }> {
-  return (await axios.post(`https://alephium-d13e6g.alephium.org/transactions/execute?fromGroup=0&toGroup=0`, { id })).data
+  return (await axios.post(`https://node.alephium.softfork.se/transactions/execute?fromGroup=0&toGroup=0`, { id })).data
 }
 
 TransactionReplayComponent.propTypes = {

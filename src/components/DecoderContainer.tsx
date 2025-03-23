@@ -28,12 +28,12 @@ interface DecoderContainerState {
 }
 
 async function fetchTransaction(txId: string): Promise<any> {
-  return (await axios.get(`https://alephium-d13e6g.alephium.org/transactions/details/${txId}`)).data
+  return (await axios.get(`https://node.alephium.softfork.se/transactions/details/${txId}`)).data
 }
 
 async function fetchContractBytecode(contractAddress: string): Promise<{ bytecode: string }> {
   const group = groupOfAddress(contractAddress)
-  return (await axios.get(`https://alephium-d13e6g.alephium.org/contracts/${contractAddress}/state?group=${group}`)).data
+  return (await axios.get(`https://node.alephium.softfork.se/contracts/${contractAddress}/state?group=${group}`)).data
 }
 
 function isContractAddress(transactionOrContract: string): boolean {
@@ -132,7 +132,7 @@ export const DecoderContainer: React.FunctionComponent<DecoderContainerProps> = 
             <InputBase
               value={state.transactionIdOrContractAddress}
               sx={{ ml: 1, flex: 1 }}
-              placeholder="Search Tx or Contract Address"
+              placeholder="Search Tx Id or Contract Address"
               inputProps={{ 'aria-label': 'search transaction or contract' }}
               onChange={(newValue) => handleSetTransactionIdOrContractAddress(newValue.target.value)}
               onKeyDown={(e) => {

@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 interface AnimatedIntroProps {
   isVisible: boolean;
@@ -78,4 +79,8 @@ export const AnimatedIntro: React.FC<AnimatedIntroProps> = ({ isVisible }) => {
       )}
     </AnimatePresence>
   );
+};
+
+AnimatedIntro.propTypes = {
+  isVisible: PropTypes.bool.isRequired
 }; 

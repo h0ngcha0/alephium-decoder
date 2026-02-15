@@ -93,52 +93,53 @@ export const DecoderContainer: React.FunctionComponent<DecoderContainerProps> = 
   const loadTransactionOrContract = useCallback((transactionIdOrContractAddress: string, currentNodeUrl: string) => {
     const contractAddress = isContractAddress(transactionIdOrContractAddress) ?
       transactionIdOrContractAddress : undefined
-    setState({
-      ...state,
+    setState(prev => ({
+      ...prev,
       transactionIdOrContractAddress: transactionIdOrContractAddress,
       decodedTx: undefined,
       contractBytecode: undefined,
-      loading: true
-    })
+      loading: true,
+      error: undefined
+    }))
 
     if (contractAddress) {
       fetchContractBytecode(contractAddress, currentNodeUrl)
         .then((response) => {
-          setState({
-            ...state,
+          setState(prev => ({
+            ...prev,
             loading: false,
             error: undefined,
             decodedTx: undefined,
             transactionIdOrContractAddress: contractAddress,
             contractBytecode: response.bytecode
-          })
+          }))
         })
         .catch((error) => {
-          setState({
-            ...state,
+          setState(prev => ({
+            ...prev,
             loading: false,
             error: error.message
-          })
+          }))
         })
     } else {
       fetchTransaction(transactionIdOrContractAddress, currentNodeUrl)
         .then((response) => {
           const rawTx = binToHex(codec.transactionCodec.encodeApiTransaction(response))
-          setState({
-            ...state,
+          setState(prev => ({
+            ...prev,
             loading: false,
             error: undefined,
             transactionIdOrContractAddress: transactionIdOrContractAddress,
             decodedTx: codec.transactionCodec.decode(hexToBinUnsafe(rawTx)),
             contractBytecode: undefined
-          })
+          }))
         })
         .catch((error) => {
-          setState({
-            ...state,
+          setState(prev => ({
+            ...prev,
             loading: false,
             error: error.message
-          })
+          }))
         })
     }
   }, [])
@@ -147,13 +148,19 @@ export const DecoderContainer: React.FunctionComponent<DecoderContainerProps> = 
     if (props.transactionIdOrContractAddress) {
       loadTransactionOrContract(props.transactionIdOrContractAddress, nodeUrl)
     }
-  }, [props.transactionIdOrContractAddress, loadTransactionOrContract, nodeUrl])
+  }, [props.transactionIdOrContractAddress, loadTransactionOrContract])
+
+  useEffect(() => {
+    if (state.transactionIdOrContractAddress) {
+      loadTransactionOrContract(state.transactionIdOrContractAddress, nodeUrl)
+    }
+  }, [network])
 
   const handleSetTransactionIdOrContractAddress = (transactionIdOrContractAddress: string) => {
-    setState({
-      ...state,
+    setState(prev => ({
+      ...prev,
       transactionIdOrContractAddress: transactionIdOrContractAddress
-    })
+    }))
   }
 
   return (

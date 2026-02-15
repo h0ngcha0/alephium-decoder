@@ -11,10 +11,23 @@ import SearchIcon from '@mui/icons-material/Search';
 import TransactionRawComponent from './TransactionRawComponent'
 import TransactionReplayComponent from './TransactionReplayComponent'
 import axios from 'axios'
-import { Link } from '@mui/material'
+import { Link, ToggleButton, ToggleButtonGroup } from '@mui/material'
 import { binToHex, contractIdFromAddress, groupOfAddress, hexToBinUnsafe } from '@alephium/web3'
 import { codec } from '@alephium/web3'
 import { AnimatedIntro } from './AnimatedIntro'
+
+export type Network = 'mainnet' | 'testnet'
+
+const networkConfig: Record<Network, { nodeUrl: string; explorerUrl: string }> = {
+  mainnet: {
+    nodeUrl: 'https://node.mainnet.alephium.org',
+    explorerUrl: 'https://explorer.alephium.org',
+  },
+  testnet: {
+    nodeUrl: 'https://node.testnet.alephium.org',
+    explorerUrl: 'https://explorer.testnet.alephium.org',
+  },
+}
 
 interface DecoderContainerProps {
   transactionIdOrContractAddress?: string
@@ -28,13 +41,13 @@ interface DecoderContainerState {
   error: string | undefined
 }
 
-async function fetchTransaction(txId: string): Promise<any> {
-  return (await axios.get(`https://node.alephium.softfork.se/transactions/details/${txId}`)).data
+async function fetchTransaction(txId: string, nodeUrl: string): Promise<any> {
+  return (await axios.get(`${nodeUrl}/transactions/details/${txId}`)).data
 }
 
-async function fetchContractBytecode(contractAddress: string): Promise<{ bytecode: string }> {
+async function fetchContractBytecode(contractAddress: string, nodeUrl: string): Promise<{ bytecode: string }> {
   const group = groupOfAddress(contractAddress)
-  return (await axios.get(`https://node.alephium.softfork.se/contracts/${contractAddress}/state?group=${group}`)).data
+  return (await axios.get(`${nodeUrl}/contracts/${contractAddress}/state?group=${group}`)).data
 }
 
 function isContractAddress(transactionOrContract: string): boolean {
@@ -54,8 +67,11 @@ export const DecoderContainer: React.FunctionComponent<DecoderContainerProps> = 
     error: undefined,
   })
   const [showIntro, setShowIntro] = useState(true);
+  const [network, setNetwork] = useState<Network>('mainnet');
 
-  const loadTransactionOrContract = useCallback((transactionIdOrContractAddress: string) => {
+  const { nodeUrl, explorerUrl } = networkConfig[network];
+
+  const loadTransactionOrContract = useCallback((transactionIdOrContractAddress: string, currentNodeUrl: string) => {
     const contractAddress = isContractAddress(transactionIdOrContractAddress) ?
       transactionIdOrContractAddress : undefined
     setState({
@@ -67,7 +83,7 @@ export const DecoderContainer: React.FunctionComponent<DecoderContainerProps> = 
     })
 
     if (contractAddress) {
-      fetchContractBytecode(contractAddress)
+      fetchContractBytecode(contractAddress, currentNodeUrl)
         .then((response) => {
           setState({
             ...state,
@@ -86,7 +102,7 @@ export const DecoderContainer: React.FunctionComponent<DecoderContainerProps> = 
           })
         })
     } else {
-      fetchTransaction(transactionIdOrContractAddress)
+      fetchTransaction(transactionIdOrContractAddress, currentNodeUrl)
         .then((response) => {
           const rawTx = binToHex(codec.transactionCodec.encodeApiTransaction(response))
           setState({
@@ -110,9 +126,9 @@ export const DecoderContainer: React.FunctionComponent<DecoderContainerProps> = 
 
   useEffect(() => {
     if (props.transactionIdOrContractAddress) {
-      loadTransactionOrContract(props.transactionIdOrContractAddress)
+      loadTransactionOrContract(props.transactionIdOrContractAddress, nodeUrl)
     }
-  }, [props.transactionIdOrContractAddress, loadTransactionOrContract])
+  }, [props.transactionIdOrContractAddress, loadTransactionOrContract, nodeUrl])
 
   const handleSetTransactionIdOrContractAddress = (transactionIdOrContractAddress: string) => {
     setState({
@@ -126,6 +142,21 @@ export const DecoderContainer: React.FunctionComponent<DecoderContainerProps> = 
       <div className={'application-definition'}>
         <div style={{ marginTop: '16px', textAlign: 'center' }}>
           <img src={`${AlephiumLogo.src}`} style={{ maxWidth: '300px', marginBottom: '20px' }} />
+          <div style={{ marginBottom: '12px' }}>
+            <ToggleButtonGroup
+              value={network}
+              exclusive
+              onChange={(_, value) => { if (value) setNetwork(value) }}
+              size="small"
+            >
+              <ToggleButton value="mainnet" sx={{ textTransform: 'none', fontSize: '12px', px: 2 }}>
+                Mainnet
+              </ToggleButton>
+              <ToggleButton value="testnet" sx={{ textTransform: 'none', fontSize: '12px', px: 2 }}>
+                Testnet
+              </ToggleButton>
+            </ToggleButtonGroup>
+          </div>
           <Paper
             component="form"
             style={{ maxWidth: '300px', textAlign: 'center', margin: '0 auto', boxShadow: '2px 2px 2px 2px grey' }}
@@ -142,12 +173,12 @@ export const DecoderContainer: React.FunctionComponent<DecoderContainerProps> = 
               }}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && state.transactionIdOrContractAddress) {
-                  loadTransactionOrContract(state.transactionIdOrContractAddress)
+                  loadTransactionOrContract(state.transactionIdOrContractAddress, nodeUrl)
                   e.preventDefault()
                 }
               }}
             />
-            <IconButton type="button" sx={{ p: '10px' }} aria-label="search" onClick={() => state.transactionIdOrContractAddress && loadTransactionOrContract(state.transactionIdOrContractAddress)}>
+            <IconButton type="button" sx={{ p: '10px' }} aria-label="search" onClick={() => state.transactionIdOrContractAddress && loadTransactionOrContract(state.transactionIdOrContractAddress, nodeUrl)}>
               <SearchIcon />
             </IconButton>
           </Paper>
@@ -161,7 +192,7 @@ export const DecoderContainer: React.FunctionComponent<DecoderContainerProps> = 
                 {
                   (state.decodedTx) && (
                     <Link
-                      href={`https://explorer.alephium.org/transactions/${state.transactionIdOrContractAddress}`}
+                      href={`${explorerUrl}/transactions/${state.transactionIdOrContractAddress}`}
                       target="_blank"
                     >
                       View on Explorer
@@ -171,7 +202,7 @@ export const DecoderContainer: React.FunctionComponent<DecoderContainerProps> = 
                 {
                   (state.contractBytecode) && (
                     <Link
-                      href={`https://explorer.alephium.org/addresses/${state.transactionIdOrContractAddress}`}
+                      href={`${explorerUrl}/addresses/${state.transactionIdOrContractAddress}`}
                       target="_blank"
                     >
                       View on Explorer
@@ -194,7 +225,7 @@ export const DecoderContainer: React.FunctionComponent<DecoderContainerProps> = 
                         ] : [
                           { title: 'Raw Tx', children: <TransactionRawComponent decoded={state.decodedTx} breakDown={false} /> },
                           { title: 'Break Down', children: <TransactionRawComponent decoded={state.decodedTx} breakDown={true} /> },
-                          { title: 'Replay', children: <TransactionReplayComponent txId={state.transactionIdOrContractAddress!} /> }
+                          { title: 'Replay', children: <TransactionReplayComponent txId={state.transactionIdOrContractAddress!} nodeUrl={nodeUrl} /> }
                         ]
                       }
                     />

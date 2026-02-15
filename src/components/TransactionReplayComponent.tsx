@@ -19,6 +19,7 @@ import PropTypes from 'prop-types'
 
 interface TransactionReplayComponentProps {
   txId: string
+  nodeUrl: string
 }
 
 type AddressBalance = [string, {attoAlphAmount: bigint, tokenAmounts: [string, bigint][]}]
@@ -46,7 +47,7 @@ interface TransactionReplayState {
 }
 
 export const TransactionReplayComponent: React.FunctionComponent<TransactionReplayComponentProps> = (props) => {
-  const { txId } = props
+  const { txId, nodeUrl } = props
   const [state, setState] = useState<TransactionReplayState>({
     step: 0,
     loading: true,
@@ -89,7 +90,7 @@ export const TransactionReplayComponent: React.FunctionComponent<TransactionRepl
   const loadTransactionExecution = useCallback(() => {
     setState({ ...state, loading: true })
 
-    executeTransaction(txId)
+    executeTransaction(txId, nodeUrl)
       .then((response) => {
         setState({
           ...state,
@@ -264,12 +265,13 @@ function toFrameSnapshots(response: any) {
   })
 }
 
-async function executeTransaction(id: string): Promise<{ frameSnapshots: FrameSnapshot[] }> {
-  return (await axios.post(`https://node.alephium.softfork.se/transactions/execute?fromGroup=0&toGroup=0`, { id })).data
+async function executeTransaction(id: string, nodeUrl: string): Promise<{ frameSnapshots: FrameSnapshot[] }> {
+  return (await axios.post(`${nodeUrl}/transactions/execute?fromGroup=0&toGroup=0`, { id })).data
 }
 
 TransactionReplayComponent.propTypes = {
-  txId: PropTypes.string.isRequired
+  txId: PropTypes.string.isRequired,
+  nodeUrl: PropTypes.string.isRequired
 }
 
 export default TransactionReplayComponent

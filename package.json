@@ -25,7 +25,7 @@
     "trailingComma": "none"
   },
   "dependencies": {
-    "@alephium/web3": "^1.5.2",
+    "@alephium/web3": "^2.0.8",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.18",
@@ -54,9 +54,9 @@
     "@types/classnames": "^2.3.1",
     "@types/jest": "^27.5.1",
     "@types/lodash": "^4.14.202",
-    "@types/node": "25.2.3",
+    "@types/node": "^20.10.2",
     "@types/qs": "^6.9.10",
-    "@types/react": "19.2.14",
+    "@types/react": "^18.2.39",
     "@types/react-dom": "18.2.17",
     "@types/react-helmet": "^6.1.9",
     "@types/react-router": "^5.1.20",
@@ -75,7 +75,7 @@
     "react-scripts": "^5.0.1",
     "ts-jest": "^29.0.5",
     "ts-node": "^10.9.1",
-    "typescript": "5.9.3"
+    "typescript": "^4.9.5"
   },
   "engines": {
     "node": ">=14.0.0 =<18.0.0",

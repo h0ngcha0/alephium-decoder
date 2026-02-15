@@ -12,7 +12,7 @@ import TransactionRawComponent from './TransactionRawComponent'
 import TransactionReplayComponent from './TransactionReplayComponent'
 import axios from 'axios'
 import { Link, ToggleButton, ToggleButtonGroup } from '@mui/material'
-import { binToHex, contractIdFromAddress, groupOfAddress, hexToBinUnsafe } from '@alephium/web3'
+import { binToHex, bs58, contractIdFromAddress, groupOfAddress, hexToBinUnsafe, addressToBytes } from '@alephium/web3'
 import { codec } from '@alephium/web3'
 import { AnimatedIntro } from './AnimatedIntro'
 
@@ -41,8 +41,27 @@ interface DecoderContainerState {
   error: string | undefined
 }
 
+function normalizeAddress(address: string): string {
+  return bs58.encode(addressToBytes(address))
+}
+
+function normalizeTransactionResponse(response: any): any {
+  if (response.unsigned?.fixedOutputs) {
+    response.unsigned.fixedOutputs.forEach((o: any) => {
+      o.address = normalizeAddress(o.address)
+    })
+  }
+  if (response.generatedOutputs) {
+    response.generatedOutputs.forEach((o: any) => {
+      if (o.address) o.address = normalizeAddress(o.address)
+    })
+  }
+  return response
+}
+
 async function fetchTransaction(txId: string, nodeUrl: string): Promise<any> {
-  return (await axios.get(`${nodeUrl}/transactions/details/${txId}`)).data
+  const response = (await axios.get(`${nodeUrl}/transactions/details/${txId}`)).data
+  return normalizeTransactionResponse(response)
 }
 
 async function fetchContractBytecode(contractAddress: string, nodeUrl: string): Promise<{ bytecode: string }> {
